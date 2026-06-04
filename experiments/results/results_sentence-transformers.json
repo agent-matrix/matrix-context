@@ -1,0 +1,43 @@
+{
+  "config": {
+    "embedder": "st",
+    "store": "memory",
+    "generator": "none",
+    "budget": 90
+  },
+  "results": [
+    {
+      "algorithm": "simple_rag",
+      "recall": 1.0,
+      "distractors": 42,
+      "tokens": 603,
+      "latency_ms": 14.57,
+      "accuracy": null
+    },
+    {
+      "algorithm": "bm25_rag",
+      "recall": 1.0,
+      "distractors": 42,
+      "tokens": 617,
+      "latency_ms": 0.18,
+      "accuracy": null
+    },
+    {
+      "algorithm": "hybrid_rag",
+      "recall": 1.0,
+      "distractors": 41,
+      "tokens": 608,
+      "latency_ms": 11.1,
+      "accuracy": null
+    },
+    {
+      "algorithm": "moc_rag",
+      "recall": 1.0,
+      "distractors": 38,
+      "tokens": 563,
+      "latency_ms": 23.99,
+      "accuracy": null
+    }
+  ],
+  "winner": "moc_rag"
+}
