@@ -1,0 +1,21 @@
+{"id": "i_auth", "content": "Decision: use OAuth 2.1 with PKCE for all MCP HTTP clients", "expert": "policy", "importance": 0.9}
+{"id": "i_auth2", "content": "Decision: use OAuth2.1 + PKCE for MCP HTTP clients (dupe)", "expert": "policy", "importance": 0.4}
+{"id": "i_approval", "content": "Policy: approval is required before writing to profile or policy memory", "expert": "policy", "importance": 0.8}
+{"id": "i_secrets", "content": "Rule: never store secrets, tokens or PII in durable memory", "expert": "policy", "importance": 0.7}
+{"id": "i_pref", "content": "The user prefers concise answers and local-first tools", "expert": "profile", "importance": 0.9}
+{"id": "i_name", "content": "The user's name is Ruslan and he works in Genoa", "expert": "profile", "importance": 0.6}
+{"id": "i_sqlite", "content": "Decision: SQLite is the default backend for local package mode", "expert": "semantic", "importance": 0.8}
+{"id": "i_pg", "content": "Decision: Postgres with pgvector is the default server backend", "expert": "semantic", "importance": 0.8}
+{"id": "i_pack", "content": "Glossary: a context pack is a token-budgeted set of context items", "expert": "semantic", "importance": 0.5}
+{"id": "i_milvus", "content": "On 2026-05-02 we agreed to defer Milvus to v2", "expert": "episodic", "importance": 0.6}
+{"id": "i_review", "content": "On 2026-04-10 the team reviewed the router design", "expert": "episodic", "importance": 0.5}
+{"id": "i_router", "content": "Architecture doc section 4: the router routes to context experts", "expert": "document", "importance": 0.5}
+{"id": "i_fts5", "content": "Manual: FTS5 is the SQLite full-text search module", "expert": "document", "importance": 0.4}
+{"id": "d_oauth", "content": "Chat: someone asked about oauth tokens in the support channel", "expert": "session", "importance": 0.2}
+{"id": "d_approve", "content": "Note: the approval workflow demo crashed during the meeting", "expert": "episodic", "importance": 0.2}
+{"id": "d_secrets", "content": "Doc: secrets management overview for the platform", "expert": "document", "importance": 0.3}
+{"id": "d_local", "content": "Chat: the user said local tools are fine for the demo", "expert": "session", "importance": 0.2}
+{"id": "d_sqlpg", "content": "Doc: sqlite vs postgres performance benchmark blog", "expert": "document", "importance": 0.3}
+{"id": "d_milvus", "content": "Episodic: milvus was mentioned in passing at standup", "expert": "session", "importance": 0.2}
+{"id": "d_route", "content": "Chat: routing question came up but was off-topic", "expert": "session", "importance": 0.1}
+{"id": "d_pkce", "content": "Doc: pkce explained in a third-party tutorial", "expert": "document", "importance": 0.3}

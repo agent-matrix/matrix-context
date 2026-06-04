@@ -1,0 +1,7 @@
+# [v2]
+image:
+  repository: ghcr.io/agent-matrix/matrix-context
+  tag: "0.1.0"
+service:
+  port: 8088
+backend: postgres

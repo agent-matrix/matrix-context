@@ -1,0 +1,47 @@
+name: experiments
+on:
+  push:
+    paths: ["experiments/**", "src/**", ".github/workflows/experiments.yml"]
+  workflow_dispatch:
+    inputs:
+      embedder: { description: "embedder", default: "ollama" }
+      store:    { description: "store", default: "chroma" }
+      generator: { description: "generator", default: "ollama" }
+
+jobs:
+  offline:
+    # Fast regression guard — no downloads, no external services.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e .
+      - run: python -m experiments.runner --embedder hashing --store memory
+      - uses: actions/upload-artifact@v4
+        with: { name: experiments-offline, path: experiments/results/ }
+
+  ollama:
+    # Real bake-off with a small local model. Manual trigger only (slow).
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e ".[experiments]"
+      - name: Install and start Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama serve &
+          sleep 5
+          ollama pull nomic-embed-text
+          ollama pull qwen2.5:0.5b
+      - name: Run bake-off
+        run: |
+          python -m experiments.runner \
+            --embedder "${{ github.event.inputs.embedder }}" \
+            --store "${{ github.event.inputs.store }}" \
+            --generator "${{ github.event.inputs.generator }}"
+      - uses: actions/upload-artifact@v4
+        with: { name: experiments-ollama, path: experiments/results/ }

@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use Matrix Context, please cite it as below."
+title: "Matrix Context: A Local-First, Inspectable Mixture-of-Contexts Layer for Agent Memory"
+abstract: >-
+  Matrix Context routes each query to a small subset of typed context experts,
+  retrieves with hybrid lexical and dense fusion, and assembles a token-budgeted,
+  explainable context pack. A Python library and (staged) MCP server for agent memory.
+type: software
+authors:
+  - family-names: "Magana Vsevolodovna"
+    given-names: "Ruslan"
+    email: "contact@ruslanmv.com"
+    website: "https://ruslanmv.com"
+version: "0.1.0"
+license: Apache-2.0
+repository-code: "https://github.com/agent-matrix/matrix-context"
+url: "https://github.com/agent-matrix/matrix-context"
+keywords:
+  - agent-memory
+  - retrieval-augmented-generation
+  - mixture-of-contexts
+  - model-context-protocol
+  - local-first
+date-released: "2026-06-04"

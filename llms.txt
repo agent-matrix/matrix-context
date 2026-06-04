@@ -1,0 +1,13 @@
+# Matrix Context
+> Local-first, inspectable Mixture-of-Contexts engine and MCP server for agent memory.
+
+Part of the Agent-Matrix ecosystem. Routes queries across typed context experts,
+retrieves with hybrid lexical+dense fusion, and assembles token-budgeted, cited,
+explainable context packs.
+
+## Docs
+- Quickstart: docs/quickstart.md
+- Architecture: docs/architecture.md
+- Routing: docs/routing.md
+- MCP: docs/mcp.md
+- Governance: docs/governance.md

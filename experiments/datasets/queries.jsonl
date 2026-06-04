@@ -1,0 +1,7 @@
+{"id": "q_auth", "text": "What did we decide about MCP authentication?", "gold_ids": ["i_auth", "i_auth2"], "gold_answer": "Use OAuth 2.1 with PKCE for MCP HTTP clients"}
+{"id": "q_approval", "text": "When is approval required for memory writes?", "gold_ids": ["i_approval"], "gold_answer": "Before writing to profile or policy memory"}
+{"id": "q_secrets", "text": "What is the rule about storing secrets?", "gold_ids": ["i_secrets"], "gold_answer": "Never store secrets, tokens or PII in durable memory"}
+{"id": "q_pref", "text": "What are the user's preferences?", "gold_ids": ["i_pref"], "gold_answer": "Concise answers and local-first tools"}
+{"id": "q_backend", "text": "What backend did we choose?", "gold_ids": ["i_sqlite", "i_pg"], "gold_answer": "SQLite locally and Postgres with pgvector on the server"}
+{"id": "q_milvus", "text": "What did we decide about Milvus?", "gold_ids": ["i_milvus"], "gold_answer": "Defer Milvus to v2"}
+{"id": "q_router", "text": "How does routing work in the architecture?", "gold_ids": ["i_router"], "gold_answer": "The router routes queries to context experts"}

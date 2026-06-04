@@ -1,0 +1,7 @@
+{"id": "q_auth", "text": "What did we decide about MCP authentication?", "expert": "policy"}
+{"id": "q_approval", "text": "When is approval required for memory writes?", "expert": "policy"}
+{"id": "q_secrets", "text": "What is the rule about storing secrets?", "expert": "policy"}
+{"id": "q_pref", "text": "What are the user's preferences?", "expert": "profile"}
+{"id": "q_backend", "text": "What backend did we choose?", "expert": "semantic"}
+{"id": "q_milvus", "text": "What did we decide about Milvus?", "expert": "episodic"}
+{"id": "q_router", "text": "How does routing work in the architecture?", "expert": "document"}

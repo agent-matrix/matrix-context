@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "matrix-context": {
+      "command": "matrix-context",
+      "args": ["serve", "--transport", "stdio"]
+    }
+  }
+}

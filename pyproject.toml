@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "matrix-context"
+version = "0.1.0"
+description = "Local-first, inspectable Mixture-of-Contexts engine and MCP server for agent memory"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [{ name = "Ruslan Magana Vsevolodovna", email = "contact@ruslanmv.com" }]
+keywords = ["agent-memory", "rag", "mcp", "context", "agent-matrix", "local-first"]
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+embeddings = ["sentence-transformers>=2.2"]
+mcp = ["mcp>=1.0"]
+postgres = ["psycopg[binary]>=3.1", "pgvector>=0.2"]
+milvus = ["pymilvus>=2.4"]
+dev = ["pytest>=7.0", "ruff>=0.4", "mypy>=1.8"]
+experiments = ["chromadb>=0.5", "ollama>=0.3", "sentence-transformers>=2.2"]
+all = ["matrix-context[embeddings,mcp,postgres,milvus]"]
+
+[project.scripts]
+matrix-context = "matrix_context.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/agent-matrix/matrix-context"
+Repository = "https://github.com/agent-matrix/matrix-context"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/matrix_context"]
+
+[tool.ruff]
+line-length = 100
+src = ["src"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true

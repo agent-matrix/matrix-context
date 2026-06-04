@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+*.db
+*.matrix-context.db
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+experiments/results/*
+!experiments/results/.gitkeep

@@ -1,0 +1,6 @@
+# [v2] Optional Milvus vector accelerator (overlay)
+services:
+  milvus:
+    image: milvusdb/milvus:latest
+    command: ["milvus", "run", "standalone"]
+    ports: ["19530:19530"]

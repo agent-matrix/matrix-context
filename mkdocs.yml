@@ -1,0 +1,15 @@
+site_name: Matrix Context
+site_description: Local-first Mixture-of-Contexts engine and MCP server for agent memory
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Architecture: architecture.md
+  - Routing: routing.md
+  - MCP: mcp.md
+  - Governance: governance.md
+  - Adapters:
+      - CrewAI: adapters/crewai.md
+      - LangGraph: adapters/langgraph.md
+      - HomePilot: adapters/homepilot.md
