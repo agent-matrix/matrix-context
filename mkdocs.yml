@@ -10,6 +10,7 @@ nav:
   - MCP: mcp.md
   - Governance: governance.md
   - Adapters:
+      - agent-generator: adapters/agent-generator.md
       - CrewAI: adapters/crewai.md
       - LangGraph: adapters/langgraph.md
       - HomePilot: adapters/homepilot.md

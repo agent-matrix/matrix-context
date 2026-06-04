@@ -1,0 +1,23 @@
+==============================================================================
+LIVE = live router (real embedder) | CMPT = competent gate | FLAT = classic RAG
+==============================================================================
+query       gold  STUB_R STUB_d  CMPT_R CMPT_d  FLAT_R FLAT_d
+------------------------------------------------------------------------------
+q_auth         2    100%      5    100%      2    100%      5
+q_approval     1    100%      6    100%      3    100%      6
+q_secrets      1    100%      6    100%      3    100%      6
+q_pref         1    100%      4    100%      1    100%      6
+q_backend      2    100%      4    100%      1    100%      6
+q_milvus       1    100%      6    100%      2    100%      6
+q_router       1    100%      7    100%      4    100%      7
+------------------------------------------------------------------------------
+
+Mean gold recall   LIVE 100%   CMPT 100%   FLAT 100%
+Total distractors  LIVE 38    CMPT 16    FLAT 42   (lower better)
+Total pack tokens  CMPT 308   FLAT 603
+Live routing accuracy 7/7 = 100%
+
+Finding: with a REAL embedder the live router discriminates — its
+routing accuracy rises and the LIVE column approaches the CMPT oracle,
+matching FLAT recall while cutting distractors and tokens. The payoff
+predicted by the stub run is realized once embedding quality is real.

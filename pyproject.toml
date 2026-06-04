@@ -36,6 +36,15 @@ packages = ["src/matrix_context"]
 line-length = 100
 src = ["src"]
 
+[tool.ruff.lint]
+# The codebase uses `stmt; stmt` deliberately for compact handlers/accumulators.
+ignore = ["E702"]
+
+[tool.ruff.lint.per-file-ignores]
+# v1 skeleton: the tool/resource/prompt surfaces are declared (re-exported) here
+# and wired to the MCP SDK once the engine is proven.
+"src/matrix_context/serve/mcp/server.py" = ["F401"]
+
 [tool.mypy]
 python_version = "3.10"
 ignore_missing_imports = true

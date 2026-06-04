@@ -1,5 +1,5 @@
 from matrix_context import ContextItem, HashingEmbedder
-from matrix_context.retrieval.lexical import bm25_rank, tokenize
+from matrix_context.retrieval.lexical import bm25_rank
 from matrix_context.retrieval.dense import dense_rank
 from matrix_context.retrieval.fusion import rrf, hybrid_retrieve
 

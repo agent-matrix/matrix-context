@@ -6,7 +6,7 @@ memories at read time without a separate pass.
 """
 from __future__ import annotations
 import time
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import numpy as np
 
@@ -21,7 +21,7 @@ def assemble_pack(candidate_scores: Dict[str, float],
                   selected_experts: List[str], routing_reason: str,
                   max_tokens: int = 600,
                   wR: float = 1.0, wI: float = 0.4, wT: float = 0.3, wD: float = 0.6,
-                  now: float = None) -> ContextPack:
+                  now: Optional[float] = None) -> ContextPack:
     now = now if now is not None else time.time()
     mx = max(candidate_scores.values()) if candidate_scores else 1.0
     mx = mx or 1.0
@@ -30,7 +30,9 @@ def assemble_pack(candidate_scores: Dict[str, float],
     chosen: List[np.ndarray] = []
 
     while pool:
-        best, best_s, best_bd = None, -1e9, None
+        best: Optional[ContextItem] = None
+        best_s: float = -1e9
+        best_bd: Dict[str, float] = {}
         for it in pool:
             rel = candidate_scores[it.id] / mx
             rec = recency_decay(it, now)
@@ -43,6 +45,7 @@ def assemble_pack(candidate_scores: Dict[str, float],
                     "importance": round(wI * it.importance, 3),
                     "recency": round(wT * rec, 3),
                     "redundancy": round(-wD * red, 3)}
+        assert best is not None  # pool is non-empty, so a best is always chosen
         pool.remove(best)
         if pack.tokens + best.approx_tokens() > max_tokens:
             pack.dropped.append({"id": best.id, "expert": best.expert,

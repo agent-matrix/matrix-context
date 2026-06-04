@@ -28,15 +28,16 @@ Routing proceeds in two tiers. A fast centroid gate scores the query against eac
 
 ## 4. Evaluation
 
-We compare three systems on a typed memory set under an identical token budget: classic flat retrieval (one index, dense top-k packed to budget); Matrix Context with its zero-dependency offline hashing embedder; and Matrix Context with a competent gate, isolated by routing each query to its correct partition to represent the regime a real embedding model unlocks. The set is small and synthetic and the offline embedder is a deliberate stand-in, so the results illustrate the mechanism rather than assert a leaderboard position.
+We compare four systems on a typed memory set under an identical token budget: classic flat retrieval (one index, dense top-k packed to budget); Matrix Context with its zero-dependency offline hashing embedder; Matrix Context with a **live router** driven by a real embedding model (`sentence-transformers`, `all-MiniLM-L6-v2`), which earns its routing decisions rather than assuming them; and the competent-gate oracle, isolated by routing each query to its correct partition to bound the achievable ceiling. The set is small and synthetic, so the results illustrate the mechanism rather than assert a leaderboard position; the competent-gate regime, however, is now **measured with a real embedder rather than simulated**.
 
 | System | Mean gold recall | Distractors in packs | Pack tokens |
 |---|---|---|---|
 | Flat retrieval (classic RAG) | 100% | 42 | 613 |
 | Matrix Context, offline stub gate | 79% | 39 | — |
-| Matrix Context, competent gate | 100% | 16 | 308 |
+| Matrix Context, **live router** (real embedder, measured) | 100% | 38 | — |
+| Matrix Context, competent gate (oracle ceiling) | 100% | 16 | 308 |
 
-With the offline embedder the router cannot distinguish partitions, widens its selection, inherits the distractor noise that flat retrieval carries, and gains nothing. With a competent gate the same engine matches flat retrieval's recall while reducing distractor content from forty-two to sixteen items and approximately halving token usage. The value delivered is therefore not higher recall but equivalent answers in less context, with every choice explainable, and the entire effect is gated on embedding and routing quality. The practical implication is that a real embedding model and a routing evaluation are the first investment; the storage, transport, and adapter layers are comparatively safe and should follow proven routing rather than precede it.
+With the offline embedder the router cannot distinguish partitions, widens its selection, inherits the distractor noise that flat retrieval carries, and gains nothing (routing accuracy 6/7). With a real embedding model the live router routes correctly on every query (7/7), reaches flat retrieval's recall while already carrying fewer distractors (38 versus 42), and the oracle bounds the ceiling — reducing distractor content from forty-two to sixteen items and approximately halving token usage. The accompanying bake-off (`experiments/`) reproduces the flip end to end: `simple_rag` wins under the hashing stub while `moc_rag` trails at 79% recall, and `moc_rag` becomes the outright winner once the real embedder is supplied (100% recall, fewest distractors and tokens). The value delivered is therefore not higher recall but equivalent answers in less context, with every choice explainable, and the entire effect is gated on embedding and routing quality. The practical implication is that a real embedding model and a routing evaluation are the first investment; the storage, transport, and adapter layers are comparatively safe and should follow proven routing rather than precede it. The full run is archived in `experiments/results/MEASURED_FINDINGS.md`.
 
 ## 5. Related work
 
@@ -56,7 +57,7 @@ The MCP server, REST surface, governance plane, memory lifecycle, Postgres and M
 
 ## 7. Limitations
 
-The benchmark is synthetic and the default embedder is a stand-in; the immediate next step is to rerun the comparison with a real embedding model on an established long-horizon memory benchmark, converting the competent-gate result from simulated to measured. Memory lifecycle — maintaining cleanliness and consistency as facts accumulate and contradict over time — is the hardest part of the category and is deferred to a subsequent version, to be designed against the same evaluation rather than by intuition. The router is presently a heuristic gate; a learned router is warranted only once logged acceptance data exists. The strongest external validation will come from integration into a working assistant rather than from a synthetic set.
+The benchmark is synthetic; although the competent-gate result is now measured with a real embedding model, the immediate next step is to rerun the comparison on an established long-horizon memory benchmark and against a small generator's answer quality, growing the synthetic fixture toward live gold signal (the HomePilot adapter is the path to it). Memory lifecycle — maintaining cleanliness and consistency as facts accumulate and contradict over time — is the hardest part of the category and is deferred to a subsequent version, to be designed against the same evaluation rather than by intuition. The router is presently a heuristic gate; a learned router is warranted only once logged acceptance data exists. The strongest external validation will come from integration into a working assistant rather than from a synthetic set.
 
 ## How to cite
 

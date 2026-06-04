@@ -59,3 +59,7 @@ class SqliteStore:
     def get(self, item_id: str) -> Optional[ContextItem]:
         r = self.db.execute("SELECT * FROM items WHERE id=?", (item_id,)).fetchone()
         return self._row(r) if r else None
+
+    def delete(self, item_id: str) -> None:
+        self.db.execute("DELETE FROM items WHERE id=?", (item_id,))
+        self.db.commit()

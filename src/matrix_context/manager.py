@@ -55,16 +55,30 @@ class ContextManager:
         return self.store.add(ContextItem(content=content, expert=expert, scope=scope,
                                           importance=importance, tags=tuple(tags), ttl=ttl))
 
-    def _route_and_score(self, query: str, scope: str, top_experts: int):
+    # Default expert fan-out. The bake-off (embedder=sentence-transformers,
+    # store=memory) measured moc_rag winning at top_experts=2 — fewer distractors
+    # and tokens at equal recall — so 2 is the promoted engine default.
+    DEFAULT_TOP_EXPERTS = 2
+
+    def _route_and_score(self, query: str, scope: str, top_experts: int,
+                         pin_experts: tuple = ()):
         decision = self.router.route(query, self.store.all_items(), top_experts)
-        cands = self.store.candidates(decision.selected, scope)
+        # Pinned experts are always injectable (e.g. profile), regardless of the
+        # routing decision — appended without disturbing the ranked order.
+        selected = list(decision.selected)
+        for e in pin_experts:
+            if e not in selected:
+                selected.append(e)
+        decision.selected = selected
+        cands = self.store.candidates(selected, scope)
         by_id = {it.id: it for it in cands}
         scores = hybrid_retrieve(query, self.embedder.encode(query), cands) if cands else {}
         return decision, scores, by_id
 
-    def build_pack(self, query: str, scope: str = "/", top_experts: int = 3,
-                   max_tokens: int = 600) -> ContextPack:
-        decision, scores, by_id = self._route_and_score(query, scope, top_experts)
+    def build_pack(self, query: str, scope: str = "/", top_experts: int = DEFAULT_TOP_EXPERTS,
+                   max_tokens: int = 600, pin_experts: tuple = ()) -> ContextPack:
+        decision, scores, by_id = self._route_and_score(query, scope, top_experts,
+                                                        pin_experts)
         return assemble_pack(scores, by_id, decision.selected, decision.reason,
                              max_tokens=max_tokens)
 
@@ -72,9 +86,10 @@ class ContextManager:
         return self.build_pack(query.text, scope=query.scopes[0],
                                top_experts=query.top_experts, max_tokens=query.max_tokens)
 
-    def inspect(self, query: str, scope: str = "/", top_experts: int = 3,
-                max_tokens: int = 600) -> str:
-        decision, scores, by_id = self._route_and_score(query, scope, top_experts)
+    def inspect(self, query: str, scope: str = "/", top_experts: int = DEFAULT_TOP_EXPERTS,
+                max_tokens: int = 600, pin_experts: tuple = ()) -> str:
+        decision, scores, by_id = self._route_and_score(query, scope, top_experts,
+                                                        pin_experts)
         pack = assemble_pack(scores, by_id, decision.selected, decision.reason,
                              max_tokens=max_tokens)
         lines = [f"ROUTING: {decision.reason}",

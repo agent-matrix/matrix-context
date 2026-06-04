@@ -14,3 +14,9 @@ venv/
 .DS_Store
 experiments/results/*
 !experiments/results/.gitkeep
+# Keep the curated measured record + the real-embedder run artifacts (the offline
+# summary.md / results.json remain ignored — CI regenerates them every push).
+!experiments/results/MEASURED_FINDINGS.md
+!experiments/results/bakeoff_sentence-transformers.md
+!experiments/results/results_sentence-transformers.json
+!experiments/results/eval_live_router_sentence-transformers.txt

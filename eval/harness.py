@@ -5,7 +5,9 @@ budget: STUB (offline hashing gate), CMPT (competent gate = real-embedder
 regime), FLAT (classic RAG). Run:  python -m eval.harness
 """
 from __future__ import annotations
+import argparse
 import json
+import os
 from pathlib import Path
 from typing import Dict, List, Set
 
@@ -21,6 +23,19 @@ DATA_DIR = Path(__file__).parent / "datasets"
 BUDGET = 90
 
 
+def _make_embedder(name: str):
+    """Offline default is the hashing stub. Selecting a real embedder turns the
+    STUB column into the LIVE-ROUTER reading so it can be compared against the
+    simulated competent-gate (CMPT) oracle."""
+    if name in ("hashing", "", None):
+        return HashingEmbedder()
+    if name in ("sentence-transformers", "st"):
+        from matrix_context.embedding.sentence_transformers import (
+            SentenceTransformerEmbedder)
+        return SentenceTransformerEmbedder()
+    raise ValueError(f"unknown embedder: {name}")
+
+
 def _load(name: str) -> List[dict]:
     rows = []
     for line in (DATA_DIR / name).read_text().splitlines():
@@ -32,8 +47,8 @@ def _load(name: str) -> List[dict]:
     return rows
 
 
-def run() -> List[dict]:
-    emb = HashingEmbedder()
+def run(embedder: str = "hashing") -> List[dict]:
+    emb = _make_embedder(embedder)
     ctx = ContextManager.create("eval", path=":memory:", embedder=emb)
     data = _load("synthetic_typed.jsonl")
     for r in data:
@@ -76,4 +91,9 @@ def run() -> List[dict]:
 
 
 if __name__ == "__main__":
-    print(render(run()))
+    p = argparse.ArgumentParser()
+    p.add_argument("--embedder",
+                   default=os.environ.get("MATRIX_CONTEXT_EVAL_EMBEDDER", "hashing"),
+                   help="hashing (offline default) | sentence-transformers | st")
+    args = p.parse_args()
+    print(render(run(args.embedder), args.embedder))

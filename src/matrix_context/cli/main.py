@@ -28,7 +28,7 @@ def build_parser() -> argparse.ArgumentParser:
         sp.add_argument("query")
         sp.add_argument("--scope", default="/")
         sp.add_argument("--max-tokens", type=int, default=600)
-        sp.add_argument("--top-experts", type=int, default=3)
+        sp.add_argument("--top-experts", type=int, default=2)
 
     sp = sub.add_parser("serve", help="run as an MCP server [v1]")
     sp.add_argument("--transport", default="stdio", choices=["stdio", "http"])
