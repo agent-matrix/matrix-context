@@ -1,0 +1,29 @@
+{
+  "algorithm": "hybrid_rag",
+  "config": {
+    "embedder": "hashing",
+    "generator": "none",
+    "split": "test",
+    "k": 8,
+    "budget": 200,
+    "queries": 120,
+    "contexts": 1000,
+    "benchmark_version": "0.1.0"
+  },
+  "metrics": {
+    "recall_at_k": 0.7875,
+    "precision_at_k": 0.1969,
+    "mrr": 0.7338,
+    "ndcg_at_k": 0.7323,
+    "distractors": 1566,
+    "hard_distractors": 142,
+    "dropped_relevant": 34,
+    "tokens": 23612,
+    "useful_context_ratio": 0.1199,
+    "latency_ms": 10.015,
+    "context_efficiency": 4.0022,
+    "routing_accuracy": null,
+    "groundedness": 0.875,
+    "citation_support": 0.8833
+  }
+}

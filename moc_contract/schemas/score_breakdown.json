@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-matrix.org/moc/v1/score_breakdown.json",
+  "title": "ScoreBreakdown",
+  "type": "object",
+  "properties": {
+    "relevance": {
+      "type": "number"
+    },
+    "importance": {
+      "type": "number"
+    },
+    "recency": {
+      "type": "number"
+    },
+    "redundancy": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "relevance",
+    "importance",
+    "recency",
+    "redundancy"
+  ]
+}

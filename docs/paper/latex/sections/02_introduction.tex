@@ -1,0 +1,51 @@
+\section{Introduction}
+
+Retrieval-augmented generation~\cite{lewis2020rag} has largely settled into one
+pattern: embed everything into a single flat index and retrieve the nearest
+chunks for every query. For agent memory---where the store mixes user
+preferences, project decisions, code, policies, episodes, and documents---this
+is both wasteful and opaque. It spends a fixed prompt budget without regard to
+the \emph{type} of what it retrieves, and it offers no account of \emph{why} a
+given item was chosen.
+
+Matrix Context proposes a different shape, which we call
+\emph{Mixture-of-Contexts RAG} (MoC-RAG). Rather than retrieving from one
+undifferentiated store, it routes each query to the smallest useful subset of
+typed \emph{context experts}, retrieves with a hybrid lexical and dense fusion
+inside them, and assembles a token-budgeted pack scored by relevance,
+importance, recency, and a redundancy penalty---with every selection explainable
+through an \texttt{inspect} interface.
+
+The central question is empirical and easy to get wrong. On queries whose words
+overlap the gold answer, a strong lexical baseline such as BM25~\cite{robertson2009bm25}
+is hard to beat, and any apparent routing win could simply reflect easy
+retrieval. We therefore stress-test the architecture where lexical matching
+becomes unreliable---under paraphrase and under \emph{adversarial} queries that
+embed misleading terms. Figure~\ref{fig:recall_by_type} previews the headline:
+BM25 is excellent on keyword-aligned queries and brittle under adversarial
+shift, while MoC-RAG degrades far more gracefully.
+
+\paragraph{Contributions.}
+\begin{enumerate}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{MoC-RAG}, a routed retrieval architecture with a hybrid expert
+  router (centroid + keyword + type + scope + activity priors) and an
+  inspectable, budgeted pack assembler (\S\ref{sec:method}).
+  \item A \textbf{public typed agent-memory benchmark} with five hard-negative
+  kinds and five query styles, including parallel keyword / paraphrased /
+  adversarial test splits that isolate robustness from topic leakage
+  (\S\ref{sec:benchmark}).
+  \item An \textbf{evidence-based robustness result}: MoC-RAG preserves higher
+  recall under adversarial lexical shift and roughly halves hard distractors
+  versus the dense baseline family, at 95--100\% routing accuracy
+  (\S\ref{sec:results}), together with a fully reproducible figure/table
+  pipeline.
+\end{enumerate}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{recall_by_query_type.pdf}
+  \caption{Recall@8 by query type (sentence-transformers embedder). BM25 leads
+  on keyword-aligned queries but collapses under adversarial phrasing; MoC-RAG
+  variants hold and overtake it on the adversarial split.}
+  \label{fig:recall_by_type}
+\end{figure}

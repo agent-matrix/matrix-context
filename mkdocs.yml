@@ -7,6 +7,7 @@ nav:
   - Quickstart: quickstart.md
   - Architecture: architecture.md
   - Routing: routing.md
+  - REST API: rest.md
   - MCP: mcp.md
   - Governance: governance.md
   - Adapters:

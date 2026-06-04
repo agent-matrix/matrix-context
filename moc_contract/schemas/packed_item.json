@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-matrix.org/moc/v1/packed_item.json",
+  "title": "PackedItem",
+  "allOf": [
+    {
+      "$ref": "https://schemas.agent-matrix.org/moc/v1/memory_item.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "final_score": {
+          "type": "number"
+        },
+        "breakdown": {
+          "$ref": "https://schemas.agent-matrix.org/moc/v1/score_breakdown.json"
+        }
+      },
+      "required": [
+        "final_score",
+        "breakdown"
+      ]
+    }
+  ]
+}

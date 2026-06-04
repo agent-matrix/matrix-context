@@ -1,0 +1,181 @@
+openapi: 3.1.0
+info:
+  title: MoC Contract
+  description: >
+    The MoC (Mixture-of-Contexts) Contract v1 — the frozen public HTTP surface
+    for typed agent-memory recall, routed retrieval, budgeted context packing,
+    and inspectable routing explanations. REST is the source-of-truth contract;
+    see mcp-mapping.md for the MCP binding. Schemas are JSON Schema 2020-12 under
+    schemas/ and are the single source of truth for wire objects.
+  version: "1.0.0"
+  license:
+    name: Apache-2.0
+servers:
+  - url: http://127.0.0.1:8088/v1
+    description: Local reference server (matrix-context serve --transport rest)
+paths:
+  /health:
+    get:
+      summary: Liveness and store size.
+      operationId: health
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "./schemas/health_response.json" }
+  /version:
+    get:
+      summary: Contract and implementation versions.
+      operationId: version
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "./schemas/version_response.json" }
+  /experts:
+    get:
+      summary: The typed context expert taxonomy.
+      operationId: experts
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "./schemas/experts_response.json" }
+  /scopes:
+    get:
+      summary: Discover the scope hierarchy present in the store.
+      operationId: scopes
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "./schemas/scopes_response.json" }
+  /items:
+    get:
+      summary: List stored items (optionally filtered by scope and/or expert).
+      operationId: listItems
+      parameters:
+        - { name: scope, in: query, required: false, schema: { type: string } }
+        - { name: expert, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "./schemas/items_response.json" }
+  /items/{id}:
+    get:
+      summary: Fetch a single item and its provenance.
+      operationId: getItem
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "./schemas/item_response.json" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "./schemas/error.json" }
+  /remember:
+    post:
+      summary: Write a typed memory item.
+      operationId: remember
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "./schemas/remember_request.json" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "./schemas/remember_response.json" }
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema: { $ref: "./schemas/error.json" }
+  /recall:
+    post:
+      summary: Retrieve candidate memories with routing + scoring (== inspect).
+      operationId: recall
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "./schemas/query_request.json" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "./schemas/inspect_response.json" }
+  /pack:
+    post:
+      summary: Produce the final budgeted, prompt-ready context pack.
+      operationId: pack
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "./schemas/query_request.json" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "./schemas/pack_response.json" }
+  /inspect:
+    post:
+      summary: Full explainable routed pack (routing + kept/dropped + breakdown).
+      operationId: inspect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "./schemas/query_request.json" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "./schemas/inspect_response.json" }
+  /router/explain:
+    post:
+      summary: Expose the expert routing decision and per-expert scores.
+      operationId: routerExplain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "./schemas/query_request.json" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "./schemas/router_explain_response.json" }
+  /forget:
+    post:
+      summary: Delete an item by id (TTL override / deletion / redaction).
+      operationId: forget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "./schemas/forget_request.json" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "./schemas/forget_response.json" }

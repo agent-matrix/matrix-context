@@ -1,0 +1,44 @@
+\section{Benchmark Design}
+\label{sec:benchmark}
+
+A small feasibility fixture is enough to show the mechanism but too
+keyword-aligned to settle the obvious objection. We therefore build a larger,
+public benchmark of typed agent memory, designed so that lexical overlap can be
+dialed down deliberately (Table~\ref{tab:dataset}).
+
+\begin{table}[t]
+  \centering
+  \caption{MoC-RAG Benchmark statistics (deterministically generated).}
+  \label{tab:dataset}
+  \input{tables/dataset_stats}
+\end{table}
+
+\paragraph{Typed items and domains.} The store spans six agentic-memory
+domains---project architecture, user/persona, code context, policy rules,
+tool/session history, and document QA---mapped onto eight typed experts and ten
+context types. Items carry importance, confidence, scope, and timestamps.
+
+\paragraph{Hard negatives.} Each gold fact is surrounded by five kinds of hard
+negative, the cases where flat retrieval is tempted: \emph{same keyword, wrong
+expert}; \emph{true fact, wrong scope}; \emph{outdated (superseded) decision};
+\emph{contradictory memory}; and \emph{stale session note}.
+
+\paragraph{Query variants.} Crucially, every gold fact is queried five ways while
+the gold label is held constant: \texttt{direct} (keyword-aligned),
+\texttt{paraphrased}, \texttt{underspecified}, \texttt{cross\_expert}, and
+\texttt{adversarial}. The adversarial phrasing deliberately embeds a misleading
+term---the same value asserted by the contradictory negative---so a flat
+lexical or dense retriever is genuinely lured toward the wrong item.
+
+\paragraph{Parallel robustness splits.} Splitting is performed at the
+\emph{topic} level, so all variants of a topic stay in one bucket. The test
+topics are then phrased three ways into parallel \texttt{test\_keyword},
+\texttt{test\_paraphrased}, and \texttt{test\_adversarial} splits. Because the
+three splits cover the same topics, a change in score is attributable to query
+\emph{style} rather than to topic leakage---this is what licenses the robustness
+comparison in \S\ref{sec:results}.
+
+\paragraph{Baselines.} We compare BM25, dense, hybrid (BM25$+$dense RRF),
+metadata-filtered hybrid, and reranked RAG against MoC-RAG with
+$\mathrm{top\_experts}\in\{1,2,3,\mathrm{all}\}$. All methods share one budgeted
+packer, so differences reflect retrieval and routing quality, not packer tricks.

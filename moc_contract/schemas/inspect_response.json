@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-matrix.org/moc/v1/inspect_response.json",
+  "title": "InspectResponse",
+  "type": "object",
+  "properties": {
+    "query": {
+      "type": "string"
+    },
+    "routing": {
+      "type": "object",
+      "properties": {
+        "selected_experts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "unselected_experts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scores": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "widened": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "selected_experts",
+        "unselected_experts",
+        "scores",
+        "widened",
+        "reason"
+      ]
+    },
+    "pack": {
+      "type": "object",
+      "properties": {
+        "tokens": {
+          "type": "integer"
+        },
+        "max_tokens": {
+          "type": "integer"
+        },
+        "selected_experts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "routing_reason": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.agent-matrix.org/moc/v1/packed_item.json"
+          }
+        },
+        "dropped": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.agent-matrix.org/moc/v1/dropped_item.json"
+          }
+        },
+        "citations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "prompt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "tokens",
+        "items",
+        "dropped",
+        "prompt"
+      ]
+    }
+  },
+  "required": [
+    "query",
+    "routing",
+    "pack"
+  ]
+}

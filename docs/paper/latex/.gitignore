@@ -1,0 +1,11 @@
+# LaTeX build aux — keep the compiled PDF, drop the rest.
+build/*
+!build/matrix_context_moc_rag.pdf
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk

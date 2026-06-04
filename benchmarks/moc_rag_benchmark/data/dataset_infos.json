@@ -1,0 +1,19 @@
+{
+  "benchmark_version": "0.1.0",
+  "counts": {
+    "contexts": 1000,
+    "queries": 600,
+    "gold": 600,
+    "experts": 8,
+    "types": 10,
+    "domains": 6,
+    "variants": 5,
+    "train": 360,
+    "validation": 120,
+    "test": 120,
+    "test_keyword": 24,
+    "test_paraphrased": 48,
+    "test_adversarial": 48,
+    "hard_negatives": 5
+  }
+}

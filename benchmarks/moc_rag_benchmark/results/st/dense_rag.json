@@ -1,0 +1,29 @@
+{
+  "algorithm": "dense_rag",
+  "config": {
+    "embedder": "st",
+    "generator": "none",
+    "split": "test",
+    "k": 8,
+    "budget": 200,
+    "queries": 120,
+    "contexts": 1000,
+    "benchmark_version": "0.1.0"
+  },
+  "metrics": {
+    "recall_at_k": 0.7792,
+    "precision_at_k": 0.1948,
+    "mrr": 0.5582,
+    "ndcg_at_k": 0.6166,
+    "distractors": 1486,
+    "hard_distractors": 271,
+    "dropped_relevant": 40,
+    "tokens": 23539,
+    "useful_context_ratio": 0.1192,
+    "latency_ms": 12.005,
+    "context_efficiency": 3.9721,
+    "routing_accuracy": null,
+    "groundedness": 0.8333,
+    "citation_support": 0.8333
+  }
+}

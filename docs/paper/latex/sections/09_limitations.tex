@@ -1,0 +1,26 @@
+\section{Limitations and Reproducibility}
+
+\paragraph{Limitations.} The benchmark is \emph{synthetic} and English-only.
+Items and queries are template-generated, and the adversarial phrasings, while
+designed to be genuinely misleading, are derived from the same templates as the
+gold facts; a determined lexical baseline tuned to the templates could narrow
+the gap. The dataset is also modest in scale (1{,}000 items, 600 queries). We do
+not claim that MoC-RAG universally beats RAG: on keyword-aligned retrieval BM25
+is at least as good, and on tasks without typed structure the routing layer adds
+cost without benefit. Finally, the answer-quality column (grounded generation
+with a small local model) is wired but not run end to end here; the results
+above are retrieval- and context-level.
+
+\paragraph{Threats to validity.} Because splitting is by topic and the three
+variant splits are parallel, the robustness comparison is insulated from topic
+leakage; but it remains a comparison within one synthetic distribution. The
+hybrid router's prior weights are fixed, not learned, and were not tuned on the
+test split.
+
+\paragraph{Reproducibility.} Generation is seeded and deterministic; baselines,
+metrics, figures, and tables are produced by committed scripts from committed
+result artifacts (\S\ref{sec:experiments}). The dataset, the result JSONs, and a
+leaderboard space are public, and the software is Apache-2.0. The next step on
+the roadmap is to grow the dataset toward human-reviewed, naturally paraphrased,
+real long-horizon memory, and to promote the hybrid router into the core engine
+only once the gains replicate off the synthetic distribution.

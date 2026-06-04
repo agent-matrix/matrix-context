@@ -1,0 +1,29 @@
+{
+  "algorithm": "reranked_rag",
+  "config": {
+    "embedder": "hashing",
+    "generator": "none",
+    "split": "test",
+    "k": 8,
+    "budget": 200,
+    "queries": 120,
+    "contexts": 1000,
+    "benchmark_version": "0.1.0"
+  },
+  "metrics": {
+    "recall_at_k": 0.85,
+    "precision_at_k": 0.2125,
+    "mrr": 0.7764,
+    "ndcg_at_k": 0.7847,
+    "distractors": 1512,
+    "hard_distractors": 123,
+    "dropped_relevant": 13,
+    "tokens": 23515,
+    "useful_context_ratio": 0.1293,
+    "latency_ms": 1.778,
+    "context_efficiency": 4.3377,
+    "routing_accuracy": null,
+    "groundedness": 0.9,
+    "citation_support": 0.9333
+  }
+}

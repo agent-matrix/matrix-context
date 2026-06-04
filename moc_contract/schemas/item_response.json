@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-matrix.org/moc/v1/item_response.json",
+  "title": "ItemResponse",
+  "type": "object",
+  "properties": {
+    "item": {
+      "$ref": "https://schemas.agent-matrix.org/moc/v1/memory_item.json"
+    }
+  },
+  "required": [
+    "item"
+  ]
+}

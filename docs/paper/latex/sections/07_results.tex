@@ -1,0 +1,84 @@
+\section{Results}
+\label{sec:results}
+
+\paragraph{Aggregate test split.} On the mixed test split, which blends all five
+query styles, MoC-RAG with $\mathrm{top\_experts}{=}3$ posts the best aggregate
+Recall@8 (86\%) and the strongest MRR/nDCG, ahead of BM25 (78\%) and the dense
+family (78--82\%), while carrying roughly half their hard distractors at
+95--100\% routing accuracy (Table~\ref{tab:main}). We stress that this aggregate
+already reflects the harder query mix; on a purely keyword-aligned split BM25 is
+co-leading, as the robustness breakdown makes explicit.
+
+\begin{table}[t]
+  \centering
+  \caption{Main benchmark results on the mixed test split (real embedder).
+  MoC-RAG rows shaded. HardDistr and Tokens: lower is better.}
+  \label{tab:main}
+  \input{tables/main_results}
+\end{table}
+
+\paragraph{Robustness by query type.} Table~\ref{tab:robust} and
+Figures~\ref{fig:recall_by_type}, \ref{fig:drop} report the central result.
+BM25's Recall@8 falls from 100\% (keyword) to 64\% (adversarial), a 36-point
+collapse, because misleading keywords pull it toward the contradictory negative.
+MoC-RAG holds within $\sim$17 points (96\%$\to$79\% for $k{=}3$) and overtakes
+BM25 on the adversarial split by $\sim$15 points. The dense, hybrid,
+metadata-filtered, and reranked baselines are less brittle than BM25 on recall
+but pay for it in harmful context.
+
+\begin{table}[t]
+  \centering
+  \caption{Robustness by query type (Recall@8 and Hard Distractors per split;
+  $\Delta$ is the keyword$\to$adversarial recall change in points).}
+  \label{tab:robust}
+  \input{tables/robustness_results}
+\end{table}
+
+\paragraph{Harmful context.} Figure~\ref{fig:hd} shows packed hard distractors on
+the adversarial split: MoC-RAG carries 48--62 versus 91--103 for the dense
+family---roughly half. Figure~\ref{fig:pareto} places methods on a recall vs.\
+hard-distractor Pareto plane; MoC-RAG variants dominate the upper-right (more
+recall, less harmful context).
+
+\begin{figure}[t]
+  \centering
+  \begin{minipage}{0.49\linewidth}
+    \centering\includegraphics[width=\linewidth]{adversarial_recall_drop.pdf}
+    \caption{Recall change, keyword$\to$adversarial (closer to 0 is more robust).}
+    \label{fig:drop}
+  \end{minipage}\hfill
+  \begin{minipage}{0.49\linewidth}
+    \centering\includegraphics[width=\linewidth]{hard_distractors.pdf}
+    \caption{Hard distractors packed on the adversarial split (lower is better).}
+    \label{fig:hd}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \begin{minipage}{0.49\linewidth}
+    \centering\includegraphics[width=\linewidth]{recall_vs_distractors.pdf}
+    \caption{Pareto front: adversarial recall vs.\ hard distractors.}
+    \label{fig:pareto}
+  \end{minipage}\hfill
+  \begin{minipage}{0.49\linewidth}
+    \centering\includegraphics[width=\linewidth]{routing_accuracy.pdf}
+    \caption{Expert routing accuracy by MoC-RAG variant.}
+    \label{fig:route}
+  \end{minipage}
+\end{figure}
+
+\paragraph{Ablation over expert fan-out.} Table~\ref{tab:abl} varies
+$\mathrm{top\_experts}$. Routing accuracy rises monotonically with $k$
+(Figure~\ref{fig:route}), reaching 100\% at $k{=}3$ and \texttt{all}; $k{=}2$ and
+$k{=}3$ give the best recall/robustness trade-off, while $k{=}1$ minimizes hard
+distractors at some recall cost. Widening to all experts recovers a flat-RAG-like
+candidate pool and erodes the distractor advantage---evidence that the
+\emph{selection}, not merely the typed store, drives the gains.
+
+\begin{table}[t]
+  \centering
+  \caption{Ablation: MoC-RAG expert fan-out $k$ across query types.}
+  \label{tab:abl}
+  \input{tables/ablations}
+\end{table}

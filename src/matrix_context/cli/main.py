@@ -30,8 +30,8 @@ def build_parser() -> argparse.ArgumentParser:
         sp.add_argument("--max-tokens", type=int, default=600)
         sp.add_argument("--top-experts", type=int, default=2)
 
-    sp = sub.add_parser("serve", help="run as an MCP server [v1]")
-    sp.add_argument("--transport", default="stdio", choices=["stdio", "http"])
+    sp = sub.add_parser("serve", help="run the REST API (v1) or MCP server")
+    sp.add_argument("--transport", default="rest", choices=["rest", "stdio", "http"])
     sp.add_argument("--host", default="127.0.0.1"); sp.add_argument("--port", type=int, default=8088)
     return p
 

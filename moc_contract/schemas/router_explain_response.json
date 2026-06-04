@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-matrix.org/moc/v1/router_explain_response.json",
+  "title": "RouterExplainResponse",
+  "type": "object",
+  "properties": {
+    "query": {
+      "type": "string"
+    },
+    "selected_experts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unselected_experts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "scores": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.agent-matrix.org/moc/v1/expert_score.json"
+      }
+    },
+    "widened": {
+      "type": "boolean"
+    },
+    "reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "query",
+    "selected_experts",
+    "unselected_experts",
+    "scores",
+    "reason"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "algorithm": "bm25_rag",
+  "config": {
+    "embedder": "hashing",
+    "generator": "none",
+    "split": "test",
+    "k": 8,
+    "budget": 200,
+    "queries": 120,
+    "contexts": 1000,
+    "benchmark_version": "0.1.0"
+  },
+  "metrics": {
+    "recall_at_k": 0.7792,
+    "precision_at_k": 0.1948,
+    "mrr": 0.7192,
+    "ndcg_at_k": 0.7271,
+    "distractors": 1566,
+    "hard_distractors": 167,
+    "dropped_relevant": 42,
+    "tokens": 23560,
+    "useful_context_ratio": 0.117,
+    "latency_ms": 7.844,
+    "context_efficiency": 3.9686,
+    "routing_accuracy": null,
+    "groundedness": 0.8333,
+    "citation_support": 0.8583
+  }
+}
