@@ -1,0 +1,36 @@
+{
+  "title": "Matrix Context: A Local-First, Inspectable Mixture-of-Contexts Layer for Agent Memory",
+  "description": "Matrix Context routes each query to a small subset of typed context experts, retrieves with hybrid lexical and dense fusion, and assembles a token-budgeted, explainable context pack scored by relevance, importance, recency, and a redundancy penalty. Ships a Python SDK, CLI, a minimal v1 REST surface (explainable /v1/inspect), framework adapters (agent-generator, HomePilot), and the MoC-RAG Benchmark — a reproducible robustness suite showing that routed typed context is markedly more robust than flat RAG when lexical matching is unreliable.",
+  "upload_type": "software",
+  "license": "Apache-2.0",
+  "version": "0.1.0",
+  "creators": [
+    {
+      "name": "Magana Vsevolodovna, Ruslan",
+      "affiliation": "Independent Researcher, Genova, Italy"
+    }
+  ],
+  "keywords": [
+    "agent-memory",
+    "retrieval-augmented-generation",
+    "mixture-of-contexts",
+    "context-routing",
+    "model-context-protocol",
+    "local-first",
+    "benchmark"
+  ],
+  "related_identifiers": [
+    {
+      "relation": "isSupplementedBy",
+      "identifier": "https://huggingface.co/datasets/ruslanmv/moc-rag-benchmark",
+      "resource_type": "dataset",
+      "scheme": "url"
+    },
+    {
+      "relation": "isDocumentedBy",
+      "identifier": "https://github.com/agent-matrix/matrix-context",
+      "resource_type": "software",
+      "scheme": "url"
+    }
+  ]
+}

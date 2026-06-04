@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-matrix.org/moc/v1/query_request.json",
+  "title": "QueryRequest",
+  "description": "Shared by /recall, /pack, /inspect, /router/explain.",
+  "type": "object",
+  "properties": {
+    "query": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "top_experts": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "max_tokens": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "pin_experts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "query"
+  ]
+}

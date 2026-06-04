@@ -1,0 +1,32 @@
+\section{Experiments}
+\label{sec:experiments}
+
+\paragraph{Setup.} We evaluate with two embedders: an offline zero-dependency
+hashing embedder (a continuous-integration guard that requires no model
+download) and \texttt{sentence-transformers/all-MiniLM-L6-v2}~\cite{reimers2019sbert}
+as the competent embedder. Unless stated otherwise, results use the real
+embedder, a per-query token budget of 200, and $K=8$ for ranking metrics. Each
+method indexes the same 1{,}000-item store and is evaluated on the held-out test
+queries.
+
+\paragraph{Metrics.} We report retrieval quality (Recall@$K$, Precision@$K$,
+MRR, nDCG@$K$), context efficiency (packed \emph{hard distractors}, total tokens,
+useful-context ratio, and Recall@$K$ per 1k tokens), expert routing accuracy for
+routed methods, and latency. \emph{Hard distractors} count items from a query's
+labeled hard-negative set that enter the assembled pack---the harmful context a
+good router should keep out.
+
+\paragraph{Reproducibility.} The benchmark is deterministic (seeded) and every
+number, figure, and table in this paper is regenerated from committed result
+artifacts:
+\begin{verbatim}
+python -m benchmarks.moc_rag_benchmark.run build
+python -m benchmarks.moc_rag_benchmark.run run     --split test --embedder st --groundedness
+python -m benchmarks.moc_rag_benchmark.run compare  --embedder st --groundedness
+make figures   # docs/paper/latex/scripts/make_paper_figures.py -> figures/*.{pdf,svg}
+make tables    # docs/paper/latex/scripts/make_paper_tables.py  -> tables/*.tex
+make paper     # compiles main.tex -> build/matrix_context_moc_rag.pdf
+\end{verbatim}
+The dataset is published at \href{https://huggingface.co/datasets/ruslanmv/moc-rag-benchmark}{huggingface.co/datasets/ruslanmv/moc-rag-benchmark}
+and the software (Apache-2.0) at
+\href{https://github.com/agent-matrix/matrix-context}{github.com/agent-matrix/matrix-context}.

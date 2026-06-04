@@ -6,5 +6,11 @@ from .schema import ContextItem, ContextPack, RecallQuery, EXPERTS
 from .embedding import HashingEmbedder, Embedder
 
 __all__ = ["ContextManager", "Config", "ContextItem", "ContextPack",
-           "RecallQuery", "EXPERTS", "HashingEmbedder", "Embedder"]
+           "RecallQuery", "EXPERTS", "HashingEmbedder", "Embedder",
+           "CONTRACT_VERSION"]
 __version__ = "0.1.0"
+
+# MoC Contract version — the frozen public wire contract (JSON Schema + OpenAPI +
+# MCP mapping under moc_contract/). Follows SemVer independently of the package
+# version: wire-object/semantic changes bump this per moc_contract/compatibility.md.
+CONTRACT_VERSION = "1.0.0"

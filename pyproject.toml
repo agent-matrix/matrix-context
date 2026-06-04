@@ -18,9 +18,10 @@ embeddings = ["sentence-transformers>=2.2"]
 mcp = ["mcp>=1.0"]
 postgres = ["psycopg[binary]>=3.1", "pgvector>=0.2"]
 milvus = ["pymilvus>=2.4"]
-dev = ["pytest>=7.0", "ruff>=0.4", "mypy>=1.8"]
+conformance = ["jsonschema>=4.18", "PyYAML>=6.0"]
+dev = ["pytest>=7.0", "ruff>=0.4", "mypy>=1.8", "jsonschema>=4.18", "PyYAML>=6.0"]
 experiments = ["chromadb>=0.5", "ollama>=0.3", "sentence-transformers>=2.2"]
-all = ["matrix-context[embeddings,mcp,postgres,milvus]"]
+all = ["matrix-context[embeddings,mcp,postgres,milvus,conformance]"]
 
 [project.scripts]
 matrix-context = "matrix_context.cli:main"

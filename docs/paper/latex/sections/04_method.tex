@@ -1,0 +1,51 @@
+\section{Method: Matrix Context / MoC-RAG}
+\label{sec:method}
+
+MoC-RAG is a four-stage pipeline---route, retrieve, rerank, pack---over a store
+of typed context items, with every stage exposed for inspection
+(Figure~\ref{fig:architecture}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{architecture.pdf}
+  \caption{MoC-RAG routes a query to typed context experts before retrieving,
+  then reranks and packs under a token budget; every choice is explainable.}
+  \label{fig:architecture}
+\end{figure}
+
+\paragraph{Typed context items.} The unit of memory carries content, an
+\emph{expert} partition, a \emph{type}, a hierarchical scope, an author-set
+importance, a confidence, an optional time-to-live, and an embedding. Typing the
+item is what enables routing by meaning and, later, governance by policy.
+
+\paragraph{Hybrid expert router.} Given a query $q$ the router scores each expert
+$e$ as a weighted sum of a dense centroid similarity and four cheap priors:
+\begin{equation}
+\mathrm{score}(e) = 0.40\,\mathrm{cos}(q, c_e) + 0.25\,\mathrm{kw}(q,e)
+ + 0.15\,\mathrm{type}(q,e) + 0.10\,\mathrm{scope}(q,e) + 0.10\,\mathrm{act}(e),
+\end{equation}
+where $c_e$ is the expert centroid (mean item embedding blended with a seed
+description), $\mathrm{kw}$ is keyword-prior overlap, $\mathrm{type}$ a query-intent
+type prior, $\mathrm{scope}$ a scope-membership prior, and $\mathrm{act}$ a recent-activity
+prior. The top-$k$ experts are selected; on low confidence or an indecisive
+margin the router \emph{widens} selection rather than guessing---graceful
+degradation that is exactly the seam where a learned classifier later plugs in.
+
+\paragraph{Hybrid retrieval.} Within the selected experts, candidates are ranked
+by Reciprocal Rank Fusion~\cite{cormack2009rrf} of a BM25 channel and a dense
+channel, so a weak channel cannot dominate.
+
+\paragraph{Reranking.} An optional local reranker re-scores the fused candidates
+by a normalized blend of dense, lexical, importance, confidence, and recency,
+leaving a cross-encoder seam for stronger rerankers.
+
+\paragraph{Budgeted pack assembly.} The pack is filled greedily under a token
+budget by
+\(
+s(i) = w_R\,\mathrm{rel}(i) + w_I\,\mathrm{imp}(i) + w_T\,\mathrm{rec}(i)
+ - w_D\,\mathrm{red}(i),
+\)
+where the redundancy term is a maximal-marginal-relevance penalty~\cite{carbonell1998mmr}
+that deduplicates near-identical memories at read time. Every kept and dropped
+item, its score breakdown, and the routing reason are returned by
+\texttt{inspect}, so the resulting context is auditable rather than a black box.

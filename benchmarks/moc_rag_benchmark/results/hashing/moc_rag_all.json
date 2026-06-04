@@ -1,0 +1,29 @@
+{
+  "algorithm": "moc_rag_all",
+  "config": {
+    "embedder": "hashing",
+    "generator": "none",
+    "split": "test",
+    "k": 8,
+    "budget": 200,
+    "queries": 120,
+    "contexts": 1000,
+    "benchmark_version": "0.1.0"
+  },
+  "metrics": {
+    "recall_at_k": 0.825,
+    "precision_at_k": 0.2062,
+    "mrr": 0.7926,
+    "ndcg_at_k": 0.7821,
+    "distractors": 1535,
+    "hard_distractors": 100,
+    "dropped_relevant": 28,
+    "tokens": 23601,
+    "useful_context_ratio": 0.1253,
+    "latency_ms": 10.354,
+    "context_efficiency": 4.1947,
+    "routing_accuracy": 1.0,
+    "groundedness": 0.8917,
+    "citation_support": 0.9083
+  }
+}

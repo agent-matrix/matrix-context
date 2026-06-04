@@ -1,0 +1,15 @@
+\begin{tabular}{l rrrr rr rr}
+\toprule
+Method & Recall@8 & Prec@8 & MRR & nDCG@8 & HardDistr$\downarrow$ & Tokens$\downarrow$ & UsefulRatio$\uparrow$ & RouteAcc \\
+\midrule
+bm25\_rag & 78\% & 19\% & 0.719 & 0.727 & 167 & 23560 & 12\% & -- \\
+dense\_rag & 78\% & 19\% & 0.558 & 0.617 & 271 & 23539 & 12\% & -- \\
+hybrid\_rag & 82\% & 21\% & 0.723 & 0.740 & 244 & 23519 & 12\% & -- \\
+metadata\_rag & 82\% & 20\% & 0.703 & 0.721 & 273 & 23364 & 13\% & -- \\
+reranked\_rag & 82\% & 21\% & 0.717 & 0.745 & 249 & 23499 & 12\% & -- \\
+\rowcolor{mocblue!8} moc\_rag\_e1 & 81\% & 20\% & 0.748 & 0.760 & 104 & 23509 & 12\% & 84\% \\
+\rowcolor{mocblue!8} moc\_rag\_e2 & 85\% & 21\% & 0.768 & 0.781 & 122 & 23547 & 13\% & 95\% \\
+\rowcolor{mocblue!8} moc\_rag\_e3 & 86\% & 22\% & 0.789 & 0.796 & 156 & 23529 & 13\% & 99\% \\
+\rowcolor{mocblue!8} moc\_rag\_all & 85\% & 21\% & 0.766 & 0.779 & 196 & 23568 & 12\% & 100\% \\
+\bottomrule
+\end{tabular}

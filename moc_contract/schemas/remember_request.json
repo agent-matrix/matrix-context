@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-matrix.org/moc/v1/remember_request.json",
+  "title": "RememberRequest",
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "string"
+    },
+    "expert": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "importance": {
+      "type": "number"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ttl": {
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "content"
+  ]
+}

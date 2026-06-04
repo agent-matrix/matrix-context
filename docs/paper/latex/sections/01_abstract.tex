@@ -1,0 +1,22 @@
+\begin{abstract}
+We introduce \emph{Mixture-of-Contexts RAG} (MoC-RAG), a routed retrieval
+architecture for agent memory that selects a small set of \emph{typed context
+experts} \emph{before} retrieving, then assembles a token-budgeted,
+inspectable context pack. To test the architecture beyond a keyword-aligned
+fixture, we build a public benchmark of typed agent memory (1{,}000 context
+items, 600 queries, eight experts, six domains) in which every gold fact is
+surrounded by five kinds of \emph{hard negative} and queried in five styles
+ranging from direct to adversarial, with the same test topics phrased into
+parallel \texttt{keyword}, \texttt{paraphrased}, and \texttt{adversarial}
+splits. On this benchmark MoC-RAG improves robustness over flat RAG baselines:
+under adversarial lexical shift a strong lexical baseline (BM25) drops from
+100\% to 64\% Recall@8 ($-36$ points), whereas MoC-RAG holds within $\sim$17
+points and overtakes BM25 on the adversarial split by $\sim$15 points, while
+carrying roughly half the hard distractors of dense, hybrid, metadata-filtered,
+and reranked RAG at 95--100\% expert-routing accuracy. We are careful not to
+overclaim: BM25 remains strong on keyword-aligned queries, and MoC-RAG's
+advantage is robustness and context efficiency under typed, distractor-heavy,
+paraphrased and adversarial conditions---the regime real agent memory inhabits.
+All figures and tables in this paper are regenerated from committed result
+artifacts by the accompanying scripts.
+\end{abstract}

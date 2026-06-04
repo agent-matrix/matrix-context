@@ -17,7 +17,10 @@ from ..schema.item import ContextItem
 class SqliteStore:
     def __init__(self, path: str, embedder: Embedder):
         self.embedder = embedder
-        self.db = sqlite3.connect(path)
+        # check_same_thread=False lets the single-threaded REST server (which runs
+        # serve_forever on its own thread) reuse the connection; requests are
+        # processed serially, so there is no concurrent access.
+        self.db = sqlite3.connect(path, check_same_thread=False)
         self.db.execute(
             """CREATE TABLE IF NOT EXISTS items (
                 id TEXT PRIMARY KEY, content TEXT, expert TEXT, scope TEXT,

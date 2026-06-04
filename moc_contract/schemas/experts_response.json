@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-matrix.org/moc/v1/experts_response.json",
+  "title": "ExpertsResponse",
+  "type": "object",
+  "properties": {
+    "experts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    }
+  },
+  "required": [
+    "experts"
+  ]
+}

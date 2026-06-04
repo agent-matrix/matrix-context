@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-matrix.org/moc/v1/version_response.json",
+  "title": "VersionResponse",
+  "type": "object",
+  "properties": {
+    "contract_version": {
+      "type": "string"
+    },
+    "implementation": {
+      "type": "string"
+    },
+    "implementation_version": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract_version",
+    "implementation",
+    "implementation_version"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-matrix.org/moc/v1/expert_score.json",
+  "title": "ExpertScore",
+  "type": "object",
+  "properties": {
+    "expert": {
+      "type": "string"
+    },
+    "score": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "expert",
+    "score"
+  ]
+}

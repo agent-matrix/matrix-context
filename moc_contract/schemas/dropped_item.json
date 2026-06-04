@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-matrix.org/moc/v1/dropped_item.json",
+  "title": "DroppedItem",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "expert": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "expert",
+    "reason"
+  ]
+}

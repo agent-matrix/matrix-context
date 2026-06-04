@@ -1,0 +1,15 @@
+\begin{tabular}{l rrr rrr r}
+\toprule
+Method & R@8 key. & R@8 par. & R@8 adv. & HD key. & HD par. & HD adv. & $\Delta$ kw$\to$adv \\
+\midrule
+bm25\_rag & 100\% & 81\% & 64\% & 27 & 68 & 72 & -36 \\
+dense\_rag & 83\% & 79\% & 74\% & 64 & 104 & 103 & -9 \\
+hybrid\_rag & 96\% & 88\% & 71\% & 52 & 101 & 91 & -25 \\
+metadata\_rag & 92\% & 88\% & 71\% & 63 & 107 & 103 & -21 \\
+reranked\_rag & 83\% & 86\% & 78\% & 56 & 96 & 97 & -5 \\
+\rowcolor{mocblue!8} moc\_rag\_e1 & 100\% & 84\% & 69\% & 22 & 40 & 42 & -31 \\
+\rowcolor{mocblue!8} moc\_rag\_e2 & 96\% & 86\% & 78\% & 26 & 48 & 48 & -18 \\
+\rowcolor{mocblue!8} moc\_rag\_e3 & 96\% & 89\% & 79\% & 30 & 64 & 62 & -17 \\
+\rowcolor{mocblue!8} moc\_rag\_all & 98\% & 85\% & 77\% & 34 & 82 & 80 & -21 \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,34 @@
+\section{Background and Related Work}
+
+\paragraph{Sparse routing.} The organizing principle behind MoC-RAG is sparse
+routing: expose many specialists but activate only the few a given input
+requires. This is the mechanism by which mixture-of-experts models scale
+capacity without proportional compute~\cite{shazeer2017moe}. Matrix Context
+applies the same principle not to model weights but to \emph{context}, treating
+the memory store as a set of typed experts selected per query.
+
+\paragraph{Retrieval and fusion.} Classic dense RAG~\cite{lewis2020rag} retrieves
+nearest neighbours from one index; lexical retrieval via BM25~\cite{robertson2009bm25}
+remains a strong, hard-to-beat baseline when query and target share vocabulary.
+Hybrid systems combine the two; we fuse the lexical and dense rankings with
+Reciprocal Rank Fusion~\cite{cormack2009rrf}, which needs no score calibration
+between channels. Dense embeddings are computed with
+sentence-transformers~\cite{reimers2019sbert}. Redundancy in the assembled pack
+is controlled with a maximal-marginal-relevance penalty~\cite{carbonell1998mmr}.
+
+\paragraph{Is this just metadata filtering?} A natural objection is that routing
+to typed experts is equivalent to filtering a flat index by metadata. We treat
+this head-on by including a metadata-filtered hybrid RAG baseline that filters
+candidates by the query scope before retrieving (\S\ref{sec:benchmark}). MoC-RAG
+differs in two ways: it routes by \emph{learned and prior-weighted typed
+relevance} rather than a hard metadata predicate, and it widens its expert
+selection under uncertainty rather than returning an empty or wrong-typed set.
+The benchmark measures whether this matters.
+
+\paragraph{Agent memory.} The contemporary agent-memory landscape---personalization,
+temporal knowledge graphs, operating-system-style memory management for
+long-running agents, and graph reasoning over private corpora---reflects the
+state of the field in early 2026. Matrix Context does not claim benchmark
+supremacy over these systems; its position is a narrower combination they do not
+bundle: a local-first default, typed and inspectable routing, and native fit
+within a single agent ecosystem.

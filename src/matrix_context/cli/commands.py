@@ -30,6 +30,9 @@ def dispatch(args) -> int:
         print(ctx.inspect(args.query, scope=args.scope,
                           top_experts=args.top_experts, max_tokens=args.max_tokens)); return 0
     if args.cmd == "serve":
+        if args.transport == "rest":
+            from ..serve.rest.app import serve as serve_rest
+            serve_rest(host=args.host, port=args.port, manager=ctx); return 0
         from ..serve.mcp.server import serve
         serve(transport=args.transport, host=args.host, port=args.port); return 0
     return 1

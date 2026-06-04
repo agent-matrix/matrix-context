@@ -1,6 +1,6 @@
 # Matrix Context: A Local-First, Inspectable Mixture-of-Contexts Layer for Agent Memory
 
-**Author.** Ruslan Magana Vsevolodovna (Agent-Matrix; ruslanmv.com). ORCID: _[add at deposit]_.
+**Author.** Ruslan Magana Vsevolodovna (Independent Researcher, Genova, Italy; ruslanmv.com). ORCID: _[add at deposit]_.
 **Version.** 0.1.0 · **Date.** 2026 · **License.** Apache-2.0 (software) / CC-BY-4.0 (this manuscript).
 **Software.** https://github.com/agent-matrix/matrix-context · **DOI.** _[minted by Zenodo on deposit]_
 
@@ -38,6 +38,12 @@ We compare four systems on a typed memory set under an identical token budget: c
 | Matrix Context, competent gate (oracle ceiling) | 100% | 16 | 308 |
 
 With the offline embedder the router cannot distinguish partitions, widens its selection, inherits the distractor noise that flat retrieval carries, and gains nothing (routing accuracy 6/7). With a real embedding model the live router routes correctly on every query (7/7), reaches flat retrieval's recall while already carrying fewer distractors (38 versus 42), and the oracle bounds the ceiling — reducing distractor content from forty-two to sixteen items and approximately halving token usage. The accompanying bake-off (`experiments/`) reproduces the flip end to end: `simple_rag` wins under the hashing stub while `moc_rag` trails at 79% recall, and `moc_rag` becomes the outright winner once the real embedder is supplied (100% recall, fewest distractors and tokens). The value delivered is therefore not higher recall but equivalent answers in less context, with every choice explainable, and the entire effect is gated on embedding and routing quality. The practical implication is that a real embedding model and a routing evaluation are the first investment; the storage, transport, and adapter layers are comparatively safe and should follow proven routing rather than precede it. The full run is archived in `experiments/results/MEASURED_FINDINGS.md`.
+
+### 4.1 Robustness benchmark
+
+To address the objection that a keyword-aligned fixture flatters lexical retrieval, we release a larger public benchmark, the MoC-RAG Benchmark (Hugging Face dataset `ruslanmv/moc-rag-benchmark`): 1,000 typed context items and 600 queries across six agentic-memory domains, eight typed experts, and five hard-negative kinds (same-keyword/wrong-expert, true-fact/wrong-scope, superseded decision, contradictory note, stale session). Each gold fact is queried in five styles — direct, paraphrased, underspecified, cross-expert, and adversarial (the last embedding a misleading term that lexically matches the contradictory negative) — and the same test topics are phrased into parallel `keyword`, `paraphrased`, and `adversarial` splits so a score change is attributable to query style, not topic leakage. Methods compared: BM25, dense, hybrid, metadata-filtered, and reranked RAG, and MoC-RAG with a hybrid router (centroid + keyword + type + scope + activity priors) at `top_experts ∈ {1,2,3,all}`.
+
+Measured with `sentence-transformers/all-MiniLM-L6-v2`, BM25 recall falls from 100% on keyword queries to 64% on adversarial queries (−36 points), whereas MoC-RAG holds within ~17 points (96%→79%) and overtakes BM25 on the adversarial split by ~15 points, while carrying roughly half the hard distractors of the dense/hybrid/metadata/reranked baselines (48–62 versus 91–103) at 95–100% routing accuracy. The benchmark thus supports the stronger and more defensible claim: routed typed context is markedly more robust than flat retrieval when context is typed, distractor-heavy, and lexical matching is unreliable. The same flip is visible offline with the hashing embedder, indicating the gain is driven by the typed-routing priors rather than embedding quality alone. Reference runs are archived in `benchmarks/moc_rag_benchmark/results/`.
 
 ## 5. Related work
 

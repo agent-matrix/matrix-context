@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-matrix.org/moc/v1/memory_item.json",
+  "title": "MemoryItem",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "expert": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "importance": {
+      "type": "number"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "created_at": {
+      "type": "number"
+    },
+    "ttl": {
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "content",
+    "expert",
+    "scope",
+    "importance",
+    "tags"
+  ]
+}
