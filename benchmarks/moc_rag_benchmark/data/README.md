@@ -123,13 +123,26 @@ projects are illustrative, not authoritative.
 
 Apache-2.0.
 
+## Conformance
+
+The reference implementation passes the **MoC Contract v1** conformance suite and
+is `MoC API v1 Compatible` / `MoC Inspect v1 Compatible`. See
+`moc_contract/` in the software repository and run
+`python -m moc_contract.conformance`.
+
 ## Citation
+
+Please cite the software via its `CITATION.cff`
+(`github.com/agent-matrix/matrix-context`). A dataset/software **DOI is
+forthcoming** (Zenodo deposit on tagged release, after manuscript review); this
+card will be updated with the DOI when minted. Until then, cite as:
 
 ```
 @software{moc_rag_benchmark,
-  title = {MoC-RAG Benchmark: Typed Context Routing for Agentic Memory},
+  title  = {MoC-RAG Benchmark: Typed Context Routing for Agentic Memory},
   author = {Magana Vsevolodovna, Ruslan},
-  year = {2026},
-  url = {https://github.com/agent-matrix/matrix-context}
+  year   = {2026},
+  note   = {Independent Researcher, Genova, Italy. DOI forthcoming.},
+  url    = {https://huggingface.co/datasets/ruslanmv/moc-rag-benchmark}
 }
 ```

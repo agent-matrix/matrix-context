@@ -1,0 +1,87 @@
+/* Matrix Context control plane — emerald glass theme (from the design tokens). */
+:root{
+  --bg:#050807; --bg2:#08110d; --panel:rgba(10,21,16,.80); --panel2:#0a1510;
+  --raised:rgba(0,255,136,.05); --line:rgba(0,255,136,.12); --line2:rgba(0,255,136,.20);
+  --ink:#ecfdf5; --ink2:rgba(236,253,245,.64); --ink3:rgba(236,253,245,.42);
+  --acc:#00ff88; --acc2:#6ef0b0; --acc-dim:#10b981; --acc-soft:rgba(0,255,136,.08); --acc-line:rgba(0,255,136,.28);
+  --blue:#5cc8ff; --amber:#d9f99d; --red:#fb7185; --red-soft:rgba(251,113,133,.10);
+  --r-sm:12px; --r-md:16px; --r-lg:22px;
+  --font:"Inter Tight","Space Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace; --top-h:56px; --side-w:248px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;-webkit-font-smoothing:antialiased}
+canvas#rain{position:fixed;inset:0;z-index:0;opacity:.06;pointer-events:none}
+#app{position:relative;z-index:1}
+.mono{font-family:var(--mono)}
+.muted{color:var(--ink2)} .dim{color:var(--ink3)}
+.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+.acc{color:var(--acc)}
+
+/* topbar */
+.top{position:sticky;top:0;z-index:6;height:var(--top-h);display:flex;align-items:center;gap:14px;padding:0 20px;
+  background:rgba(0,0,0,.45);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700}
+.brand img{width:26px;height:26px}
+.spacer{flex:1}
+.pill{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:999px;padding:4px 11px;color:var(--ink2)}
+.pill.ok{color:var(--acc);border-color:var(--acc-line);box-shadow:0 0 14px rgba(0,255,136,.12)}
+.pill.bad{color:var(--red);border-color:var(--red)}
+
+/* layout */
+.layout{display:flex;min-height:calc(100vh - var(--top-h))}
+.side{width:var(--side-w);border-right:1px solid var(--line);padding:16px 12px;background:rgba(0,0,0,.28)}
+.navgroup{margin:6px 0 14px}
+.navgroup .lbl{padding:0 10px 6px}
+.tab{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;color:var(--ink2);font-weight:500}
+.tab:hover{background:var(--acc-soft);color:var(--ink)}
+.tab.active{background:var(--acc-soft);color:var(--ink);box-shadow:inset 2px 0 0 var(--acc)}
+.tab .ic{width:16px;text-align:center;color:var(--acc);font-family:var(--mono);font-size:12px}
+.main{flex:1;padding:26px 30px;max-width:1120px}
+h1{font-size:24px;margin:0 0 4px;letter-spacing:-.01em}
+h2{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);margin:0 0 12px}
+.sub{color:var(--ink2);margin:0 0 22px;max-width:70ch}
+
+/* glass cards */
+.card{background:var(--panel);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px}
+.grid{display:grid;gap:14px}.cols-2{grid-template-columns:1fr 1fr}.cols-3{grid-template-columns:repeat(3,1fr)}
+.cols-inspect{grid-template-columns:320px 1fr 300px}
+.stat{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+.kv:last-child{border-bottom:0}
+.value-card h3{margin:0 0 4px;font-size:15px}.value-card p{margin:0;color:var(--ink2);font-size:13px}
+
+/* forms */
+label{display:block;font-size:12px;color:var(--ink3);margin:0 0 5px}
+input,textarea,select{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:inherit;padding:9px 11px}
+textarea{min-height:130px;resize:vertical;font-family:var(--mono);font-size:12.5px;line-height:1.5}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--acc-line);box-shadow:0 0 0 3px var(--acc-soft)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+button{background:var(--acc);color:#03140c;border-radius:10px;padding:9px 18px;font-weight:700}
+button:hover{filter:brightness(1.06)}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line2)}
+button.sm{padding:6px 11px;font-size:12px;border-radius:8px}
+button:disabled{opacity:.5;cursor:not-allowed}
+
+/* chips, tables, bars */
+.chip{display:inline-block;font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:999px;margin:2px 5px 2px 0;border:1px solid var(--line);color:var(--ink2)}
+.chip.on{color:var(--acc);border-color:var(--acc-line);background:var(--acc-soft)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--ink3);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.07em}
+tr.click{cursor:pointer} tr.click:hover td{background:var(--acc-soft)}
+.bar{height:7px;background:rgba(0,255,136,.08);border-radius:5px;overflow:hidden;min-width:90px}
+.bar>span{display:block;height:100%;background:var(--acc)}
+pre{background:#04100b;border:1px solid var(--line);border-radius:12px;padding:13px;overflow:auto;white-space:pre-wrap;font-family:var(--mono);font-size:12.5px;color:#cdeede}
+.log{font-family:var(--mono);font-size:12px;background:#04100b;border:1px solid var(--line);border-radius:12px;padding:11px;max-height:210px;overflow:auto}
+.log .ok{color:var(--acc)} .log .code{color:var(--ink3)} .log .err{color:var(--red)}
+.tag{font-family:var(--mono);font-size:11px;color:var(--amber)}
+.reason{color:var(--red);font-size:12px}
+.right{text-align:right}.dropped td{color:var(--ink3)}
+.note{font-size:12px;color:var(--ink3);margin-top:8px}
+.banner{display:none;background:var(--red-soft);border:1px solid var(--red);color:#ffd9de;padding:10px 14px;border-radius:12px;margin-bottom:16px}
+.banner.show{display:block}
+.install{font-family:var(--mono);font-size:12.5px;background:#04100b;border:1px solid var(--line);border-radius:10px;padding:10px 13px;color:var(--acc2)}
+@media (max-width:900px){.cols-3,.cols-2,.cols-inspect{grid-template-columns:1fr}.side{width:70px}.tab .t,.navgroup .lbl{display:none}}
+@media (prefers-reduced-motion:reduce){canvas#rain{display:none}}

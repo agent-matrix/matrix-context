@@ -23,7 +23,9 @@ returning ``(status, payload)`` so the contract is testable without sockets.
 from __future__ import annotations
 
 import json
+from functools import lru_cache
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
 from typing import Dict, Optional, Tuple
 from urllib.parse import parse_qs, urlparse
 
@@ -33,6 +35,35 @@ from ...routing.experts import EXPERT_DESCRIPTIONS
 from ...schema.enums import EXPERTS
 
 API_PREFIX = "/v1"
+_INSPECTOR_HTML = Path(__file__).parent / "inspector.html"
+_CONSOLE_DIR = Path(__file__).parent / "console"
+_CONTENT_TYPES = {".html": "text/html; charset=utf-8",
+                  ".js": "application/javascript; charset=utf-8",
+                  ".css": "text/css; charset=utf-8",
+                  ".svg": "image/svg+xml", ".json": "application/json",
+                  ".png": "image/png", ".ico": "image/x-icon"}
+
+
+@lru_cache(maxsize=1)
+def inspector_html() -> str:
+    """The bundled single-file Context Inspector UI (served at / and /ui)."""
+    return _INSPECTOR_HTML.read_text(encoding="utf-8")
+
+
+def console_asset(name: str) -> Optional[Tuple[bytes, str]]:
+    """Read a bundled Console asset by name (path-traversal safe).
+
+    Returns ``(bytes, content_type)`` or ``None`` if it is not a known file.
+    The Console is a zero-dependency, same-origin SPA served at /console.
+    """
+    name = (name or "").lstrip("/") or "index.html"
+    if "/" in name or "\\" in name or name.startswith("."):
+        return None                      # no nested paths / traversal in Phase 0
+    path = _CONSOLE_DIR / name
+    if not path.is_file() or path.parent != _CONSOLE_DIR:
+        return None
+    ctype = _CONTENT_TYPES.get(path.suffix, "application/octet-stream")
+    return path.read_bytes(), ctype
 
 
 class HttpError(Exception):
@@ -217,6 +248,21 @@ def _make_handler(service: RestService):
             self.end_headers()
             self.wfile.write(data)
 
+        def _send_html(self, html: str):
+            data = html.encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+
+        def _send_bytes(self, data: bytes, content_type: str):
+            self.send_response(200)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+
         def _read_body(self) -> dict:
             length = int(self.headers.get("Content-Length") or 0)
             if not length:
@@ -232,6 +278,25 @@ def _make_handler(service: RestService):
 
         def do_GET(self):
             parsed = urlparse(self.path)
+            if parsed.path in ("/", "/ui", "/inspector"):
+                self._send_html(inspector_html())
+                return
+            if parsed.path == "/favicon.ico":
+                self._send(204, {})
+                return
+            # Context Console (same-origin SPA): /console and /console/<asset>
+            if parsed.path == "/console" or parsed.path == "/console/":
+                asset = console_asset("index.html")
+                if asset:
+                    self._send_bytes(*asset)
+                    return
+            if parsed.path.startswith("/console/"):
+                asset = console_asset(parsed.path[len("/console/"):])
+                if asset:
+                    self._send_bytes(*asset)
+                else:
+                    self._send(404, {"error": f"not found: {parsed.path}"})
+                return
             status, payload = dispatch(service, "GET", parsed.path,
                                        query=parse_qs(parsed.query))
             self._send(status, payload)

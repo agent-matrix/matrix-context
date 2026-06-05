@@ -1,0 +1,28 @@
+{
+  "contract_version": "1.0.0",
+  "facets": {
+    "api": {
+      "label": "MoC API v1",
+      "status": "compatible",
+      "passed": 35,
+      "total": 35
+    },
+    "inspect": {
+      "label": "MoC Inspect v1",
+      "status": "compatible",
+      "passed": 10,
+      "total": 10
+    },
+    "mcp": {
+      "label": "MoC MCP v1",
+      "status": "pending",
+      "passed": 0,
+      "total": 0
+    }
+  },
+  "badges": {
+    "api": "moc_api_v1.svg",
+    "inspect": "moc_inspect_v1.svg",
+    "mcp": "moc_mcp_v1.svg"
+  }
+}

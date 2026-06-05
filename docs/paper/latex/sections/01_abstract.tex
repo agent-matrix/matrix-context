@@ -13,10 +13,10 @@ under adversarial lexical shift a strong lexical baseline (BM25) drops from
 100\% to 64\% Recall@8 ($-36$ points), whereas MoC-RAG holds within $\sim$17
 points and overtakes BM25 on the adversarial split by $\sim$15 points, while
 carrying roughly half the hard distractors of dense, hybrid, metadata-filtered,
-and reranked RAG at 95--100\% expert-routing accuracy. We are careful not to
-overclaim: BM25 remains strong on keyword-aligned queries, and MoC-RAG's
-advantage is robustness and context efficiency under typed, distractor-heavy,
-paraphrased and adversarial conditions---the regime real agent memory inhabits.
-All figures and tables in this paper are regenerated from committed result
-artifacts by the accompanying scripts.
+and reranked RAG at 95--100\% expert-routing accuracy. These results do not show
+that MoC-RAG is universally better than RAG; they show a narrower but important
+advantage: when agent memory is typed, noisy, and queried under paraphrase or
+misleading wording, routing before retrieval yields cleaner and more robust
+context---the regime real agent memory inhabits. All figures and tables in this
+paper are regenerated from committed result artifacts by the accompanying scripts.
 \end{abstract}

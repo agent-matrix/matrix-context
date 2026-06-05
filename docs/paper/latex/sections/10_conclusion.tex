@@ -7,7 +7,7 @@ paraphrased and adversarial queries with planted hard negatives. The evidence is
 specific and bounded. A strong lexical baseline collapses by 36 points from
 keyword to adversarial queries, while MoC-RAG holds within $\sim$17 points,
 overtakes that baseline on the adversarial split, and packs roughly half the
-harmful context of the dense baseline family at 95--100\% routing accuracy. The
+harmful context of the embedding-based baselines at 95--100\% routing accuracy. The
 advantage is robustness and context efficiency under typed, distractor-heavy
 conditions---not universal supremacy over all RAG.
 
@@ -18,10 +18,12 @@ pipeline. The artifacts---software at
 dataset at
 \href{https://huggingface.co/datasets/ruslanmv/moc-rag-benchmark}{huggingface.co/datasets/ruslanmv/moc-rag-benchmark},
 and a leaderboard space---let anyone reproduce, contest, or extend the result.
-We hope the benchmark, more than the method, is the lasting contribution: a place
-where the value of typed context routing can be measured honestly.
+We hope the benchmark is useful even to readers who do not adopt MoC-RAG: it
+provides a place to measure typed context routing honestly.
 
 \section*{Availability}
-Software: Apache-2.0, \texttt{github.com/agent-matrix/matrix-context}. Dataset:
-\texttt{ruslanmv/moc-rag-benchmark} (Hugging Face). A Zenodo DOI is minted on
-tagged release (see \texttt{.zenodo.json}, \texttt{RELEASE.md}).
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Software (Apache-2.0): \url{https://github.com/agent-matrix/matrix-context}
+  \item Dataset: \url{https://huggingface.co/datasets/ruslanmv/moc-rag-benchmark}
+  \item Leaderboard: \url{https://huggingface.co/spaces/ruslanmv/moc-rag-leaderboard}
+\end{itemize}

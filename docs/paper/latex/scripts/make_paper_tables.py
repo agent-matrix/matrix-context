@@ -35,6 +35,19 @@ def _f3(v):
     return "--" if v is None else f"{v:.3f}"
 
 
+def _best_idx(vals, lower=False):
+    """Indices of the best (max, or min if lower) non-null value — ties included."""
+    nums = [(i, v) for i, v in enumerate(vals) if v is not None]
+    if not nums:
+        return set()
+    best = min(v for _, v in nums) if lower else max(v for _, v in nums)
+    return {i for i, v in nums if v == best}
+
+
+def _bf(s: str, on: bool) -> str:
+    return r"\textbf{" + s + "}" if on else s
+
+
 def _write(name: str, lines):
     TBLDIR.mkdir(parents=True, exist_ok=True)
     (TBLDIR / name).write_text("\n".join(lines) + "\n")
@@ -46,10 +59,20 @@ def main_results(res):
     head = (r"Method & Recall@8 & Prec@8 & MRR & nDCG@8 & "
             r"HardDistr$\downarrow$ & Tokens$\downarrow$ & UsefulRatio$\uparrow$ & RouteAcc \\")
     lines = [r"\begin{tabular}{" + cols + "}", r"\toprule", head, r"\midrule"]
-    for m in res["order"]:
-        d = res["results"][m]
-        row = (f"{_esc(m)} & {_pct(d['recall_at_k'])} & {_pct(d['precision_at_k'])} & "
-               f"{_f3(d['mrr'])} & {_f3(d['ndcg_at_k'])} & {_num(d['hard_distractors'])} & "
+    order = res["order"]
+    R = res["results"]
+    # Best value per key column gets bolded (ties included): recall/MRR/nDCG up,
+    # hard distractors down.
+    b_rec = _best_idx([R[m]["recall_at_k"] for m in order])
+    b_mrr = _best_idx([R[m]["mrr"] for m in order])
+    b_ndcg = _best_idx([R[m]["ndcg_at_k"] for m in order])
+    b_hd = _best_idx([R[m]["hard_distractors"] for m in order], lower=True)
+    for i, m in enumerate(order):
+        d = R[m]
+        row = (f"{_esc(m)} & {_bf(_pct(d['recall_at_k']), i in b_rec)} & "
+               f"{_pct(d['precision_at_k'])} & {_bf(_f3(d['mrr']), i in b_mrr)} & "
+               f"{_bf(_f3(d['ndcg_at_k']), i in b_ndcg)} & "
+               f"{_bf(_num(d['hard_distractors']), i in b_hd)} & "
                f"{_num(d['tokens'])} & {_pct(d['useful_context_ratio'])} & "
                f"{_pct(d.get('routing_accuracy'))} \\\\")
         if m.startswith("moc_rag"):
@@ -65,12 +88,21 @@ def robustness_results(var):
             + " & ".join(f"HD {c[:3]}." for c in cats)
             + r" & $\Delta$ kw$\to$adv \\")
     lines = [r"\begin{tabular}{l rrr rrr r}", r"\toprule", head, r"\midrule"]
-    for m in var["order"]:
-        r = var["results"][m]
-        rec = " & ".join(_pct(r[c]["recall_at_k"]) for c in cats)
-        hd = " & ".join(_num(r[c]["hard_distractors"]) for c in cats)
-        delta = (r[cats[-1]]["recall_at_k"] - r[cats[0]]["recall_at_k"]) * 100
-        row = f"{_esc(m)} & {rec} & {hd} & {delta:+.0f} \\\\"
+    order = var["order"]
+    Rr = var["results"]
+    # Bold best per column: highest recall and lowest hard distractors per split,
+    # and the smallest keyword->adversarial drop (Delta closest to zero).
+    b_rec = {c: _best_idx([Rr[m][c]["recall_at_k"] for m in order]) for c in cats}
+    b_hd = {c: _best_idx([Rr[m][c]["hard_distractors"] for m in order], lower=True)
+            for c in cats}
+    deltas = [(Rr[m][cats[-1]]["recall_at_k"] - Rr[m][cats[0]]["recall_at_k"]) * 100
+              for m in order]
+    b_delta = _best_idx(deltas)
+    for i, m in enumerate(order):
+        r = Rr[m]
+        rec = " & ".join(_bf(_pct(r[c]["recall_at_k"]), i in b_rec[c]) for c in cats)
+        hd = " & ".join(_bf(_num(r[c]["hard_distractors"]), i in b_hd[c]) for c in cats)
+        row = f"{_esc(m)} & {rec} & {hd} & {_bf(f'{deltas[i]:+.0f}', i in b_delta)} \\\\"
         if m.startswith("moc_rag"):
             row = r"\rowcolor{mocblue!8} " + row
         lines.append(row)

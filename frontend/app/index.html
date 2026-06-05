@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Matrix Context — Control Plane</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/styles.css"/>
+</head>
+<body>
+  <canvas id="rain"></canvas>
+  <div id="app"></div>
+  <script src="/api.js"></script>
+  <script src="/app.js"></script>
+  <script>
+    /* subtle matrix rain (off when prefers-reduced-motion) */
+    (function () {
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      var c = document.getElementById("rain"), x = c.getContext("2d"), W, H, cols, drops;
+      var g = "01ｱｲｳｴｵｶｷｸ<>=*+:.".split("");
+      function rs(){ W=c.width=innerWidth; H=c.height=innerHeight; cols=Math.floor(W/16); drops=Array(cols).fill(0).map(function(){return Math.random()*-50;}); }
+      rs(); addEventListener("resize", rs);
+      (function frame(){
+        if (window.__rainOff){ requestAnimationFrame(frame); return; }
+        x.fillStyle="rgba(5,8,7,0.10)"; x.fillRect(0,0,W,H);
+        x.fillStyle="#00ff88"; x.font="14px monospace";
+        for(var i=0;i<cols;i++){ x.fillText(g[Math.floor(Math.random()*g.length)], i*16, drops[i]*16);
+          if(drops[i]*16>H && Math.random()>0.975) drops[i]=Math.random()*-20; drops[i]+=0.4; }
+        requestAnimationFrame(frame);
+      })();
+    })();
+  </script>
+</body>
+</html>

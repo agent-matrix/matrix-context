@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Matrix Context — Context Inspector</title>
+<style>
+  :root { --blue:#1a73e8; --blue2:#0b3d91; --grey:#9aa0a6; --bg:#f6f8fa; --red:#d93025; }
+  * { box-sizing: border-box; }
+  body { font:14px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+         margin:0; color:#202124; background:var(--bg); }
+  header { background:var(--blue2); color:#fff; padding:14px 20px; }
+  header h1 { margin:0; font-size:18px; }
+  header small { opacity:.8; }
+  main { max-width:1000px; margin:0 auto; padding:18px; display:grid; gap:16px; }
+  .card { background:#fff; border:1px solid #e0e0e0; border-radius:8px; padding:14px 16px; }
+  .card h2 { margin:0 0 10px; font-size:14px; text-transform:uppercase; letter-spacing:.04em; color:#5f6368; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; }
+  label { display:block; font-size:12px; color:#5f6368; margin-bottom:3px; }
+  input, textarea, select { font:inherit; padding:7px 9px; border:1px solid #ccc; border-radius:6px; width:100%; }
+  textarea { resize:vertical; min-height:46px; }
+  button { background:var(--blue); color:#fff; border:0; border-radius:6px; padding:8px 16px;
+           font-weight:600; cursor:pointer; }
+  button.secondary { background:#eef1f5; color:#202124; }
+  .chip { display:inline-block; padding:3px 9px; border-radius:12px; font-size:12px; margin:2px; }
+  .chip.sel { background:#e6f4ea; color:#137333; border:1px solid #137333; }
+  .chip.unsel { background:#f1f3f4; color:#5f6368; border:1px solid #dadce0; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid #eee; vertical-align:top; }
+  th { color:#5f6368; font-weight:600; }
+  .bar { height:7px; background:#e8eaed; border-radius:4px; overflow:hidden; min-width:80px; }
+  .bar > span { display:block; height:100%; background:var(--blue); }
+  .muted { color:#5f6368; } .mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+  pre { background:#0d1117; color:#e6edf3; padding:12px; border-radius:8px; overflow:auto; white-space:pre-wrap; }
+  .dropped td { color:#9aa0a6; }
+  .reason { color:var(--red); font-size:12px; }
+  .pill { font-size:11px; background:#eef1f5; border-radius:10px; padding:1px 7px; margin-left:6px; }
+  .err { color:var(--red); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Matrix Context — Context Inspector</h1>
+  <small>Run a query, see why each item was routed, kept, or dropped. <span id="ver" class="pill"></span></small>
+</header>
+<main>
+  <section class="card">
+    <h2>Add memory</h2>
+    <div class="row">
+      <div style="flex:3 1 320px"><label>Content</label>
+        <textarea id="content" placeholder="Decision: use SQLite as the default backend"></textarea></div>
+      <div style="flex:1 1 130px"><label>Expert</label><select id="expert"></select></div>
+      <div style="flex:0 1 110px"><label>Importance</label><input id="importance" type="number" min="0" max="1" step="0.1" value="0.6"></div>
+      <div style="flex:0 1 140px"><label>Scope</label><input id="scope" value="/"></div>
+      <div><button id="remember">Remember</button></div>
+    </div>
+    <div id="rememberMsg" class="muted" style="margin-top:8px"></div>
+  </section>
+
+  <section class="card">
+    <h2>Query</h2>
+    <div class="row">
+      <div style="flex:3 1 360px"><label>Query</label>
+        <input id="query" value="what did we decide about the backend?"></div>
+      <div style="flex:0 1 120px"><label>Max tokens</label><input id="maxTokens" type="number" value="120"></div>
+      <div style="flex:0 1 120px"><label>Top experts</label><input id="topExperts" type="number" value="2"></div>
+      <div><button id="inspect">Inspect</button>
+           <button id="loadSample" class="secondary">Load sample</button></div>
+    </div>
+    <div id="queryMsg" class="err" style="margin-top:8px"></div>
+  </section>
+
+  <section class="card" id="routingCard" style="display:none">
+    <h2>Routing <span id="routingReason" class="muted" style="text-transform:none;font-weight:400"></span></h2>
+    <div><strong>Selected:</strong> <span id="selected"></span></div>
+    <div style="margin-top:6px"><strong>Not selected:</strong> <span id="unselected"></span></div>
+    <table style="margin-top:10px"><thead><tr><th>Expert</th><th>Score</th><th></th></tr></thead>
+      <tbody id="scores"></tbody></table>
+  </section>
+
+  <section class="card" id="packCard" style="display:none">
+    <h2>Context pack <span id="packTokens" class="pill"></span></h2>
+    <table><thead><tr><th>Expert</th><th>Content</th><th>Score</th><th>Breakdown (rel / imp / rec / −red)</th></tr></thead>
+      <tbody id="kept"></tbody></table>
+    <div id="droppedWrap" style="margin-top:12px; display:none">
+      <h2 style="font-size:13px">Dropped</h2>
+      <table><thead><tr><th>Expert</th><th>Item</th><th>Reason</th></tr></thead>
+        <tbody id="dropped"></tbody></table>
+    </div>
+  </section>
+
+  <section class="card" id="promptCard" style="display:none">
+    <h2>Prompt-ready pack</h2>
+    <pre id="prompt"></pre>
+  </section>
+</main>
+
+<script>
+const API = location.origin + "/v1";
+const $ = id => document.getElementById(id);
+
+async function call(method, path, body) {
+  const opt = { method, headers: { "Content-Type": "application/json" } };
+  if (body) opt.body = JSON.stringify(body);
+  const r = await fetch(API + path, opt);
+  let data = {}; try { data = await r.json(); } catch (e) {}
+  return { status: r.status, data };
+}
+
+async function init() {
+  const v = await call("GET", "/version");
+  if (v.status === 200) $("ver").textContent = "contract v" + v.data.contract_version;
+  const e = await call("GET", "/experts");
+  if (e.status === 200) $("expert").innerHTML =
+    e.data.experts.map(x => `<option value="${x.name}">${x.name}</option>`).join("");
+}
+
+$("remember").onclick = async () => {
+  const content = $("content").value.trim();
+  if (!content) return;
+  const r = await call("POST", "/remember", {
+    content, expert: $("expert").value, scope: $("scope").value,
+    importance: parseFloat($("importance").value) });
+  $("rememberMsg").textContent = r.status === 201
+    ? "Remembered " + r.data.item.id + " [" + r.data.item.expert + "]"
+    : "Error: " + (r.data.error || r.status);
+  $("content").value = "";
+};
+
+$("loadSample").onclick = async () => {
+  const samples = [
+    ["Decision: use SQLite as the default storage backend", "decision_memory", 0.95],
+    ["The user prefers local-first tools over cloud services", "profile", 0.9],
+    ["Policy: never store API keys or PII in durable memory", "policy", 0.9],
+    ["A conflicting note claims the backend is Postgres", "session", 0.3],
+    ["On 2026-05-02 we deferred Milvus support to v2", "episodic", 0.6]];
+  for (const [content, expert, importance] of samples)
+    await call("POST", "/remember", { content, expert, importance });
+  $("rememberMsg").textContent = "Loaded " + samples.length + " sample memories.";
+};
+
+function chips(el, names, cls) {
+  el.innerHTML = names.length
+    ? names.map(n => `<span class="chip ${cls}">${n}</span>`).join("")
+    : '<span class="muted">none</span>';
+}
+
+$("inspect").onclick = async () => {
+  $("queryMsg").textContent = "";
+  const r = await call("POST", "/inspect", {
+    query: $("query").value, max_tokens: parseInt($("maxTokens").value),
+    top_experts: parseInt($("topExperts").value) });
+  if (r.status !== 200) { $("queryMsg").textContent = "Error: " + (r.data.error || r.status); return; }
+  const { routing, pack } = r.data;
+
+  $("routingCard").style.display = "";
+  $("routingReason").textContent = "— " + routing.reason;
+  chips($("selected"), routing.selected_experts, "sel");
+  chips($("unselected"), routing.unselected_experts, "unsel");
+  const max = Math.max(...Object.values(routing.scores), 0.0001);
+  $("scores").innerHTML = Object.entries(routing.scores)
+    .sort((a, b) => b[1] - a[1])
+    .map(([e, s]) => {
+      const on = routing.selected_experts.includes(e);
+      return `<tr><td>${on ? "● " : ""}${e}</td><td class="mono">${s.toFixed(3)}</td>
+        <td><div class="bar"><span style="width:${(100*s/max).toFixed(0)}%;
+          background:${on ? "#1a73e8" : "#9aa0a6"}"></span></div></td></tr>`;
+    }).join("");
+
+  $("packCard").style.display = "";
+  $("packTokens").textContent = pack.tokens + " / " + pack.max_tokens + " tokens";
+  $("kept").innerHTML = pack.items.map(p => {
+    const b = p.breakdown;
+    return `<tr><td>${p.expert}</td><td>${p.content}</td>
+      <td class="mono">${p.final_score}</td>
+      <td class="mono muted">${b.relevance} / ${b.importance} / ${b.recency} / ${b.redundancy}</td></tr>`;
+  }).join("");
+  const dropped = pack.dropped || [];
+  $("droppedWrap").style.display = dropped.length ? "" : "none";
+  $("dropped").innerHTML = dropped.map(d =>
+    `<tr class="dropped"><td>${d.expert}</td><td class="mono">${d.id}</td>
+      <td class="reason">${d.reason}</td></tr>`).join("");
+
+  $("promptCard").style.display = "";
+  $("prompt").textContent = pack.prompt;
+};
+
+init();
+</script>
+</body>
+</html>

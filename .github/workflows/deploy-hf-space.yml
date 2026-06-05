@@ -1,0 +1,38 @@
+name: deploy-hf-space
+# Publish the Matrix Context Console to a Hugging Face Docker Space.
+# Requires a repository secret HF_TOKEN (Settings → Secrets → Actions) with
+# write access. Without it, the deploy step no-ops (hf/deploy.py skips).
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "HF Space repo id"
+        default: "ruslanmv/matrix-context-console"
+      private:
+        description: "Create the Space private?"
+        type: boolean
+        default: true
+  push:
+    branches: [main, master]
+    paths:
+      - "frontend/**"
+      - "hf/**"
+      - "src/**"
+      - "pyproject.toml"
+      - ".github/workflows/deploy-hf-space.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install "huggingface_hub>=0.24"
+      - name: Deploy to Hugging Face Spaces
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python hf/deploy.py \
+            --repo "${{ github.event.inputs.repo || 'ruslanmv/matrix-context-console' }}" \
+            ${{ github.event.inputs.private == 'true' && '--private' || '' }}

@@ -11,6 +11,17 @@ requires-python = ">=3.10"
 license = "Apache-2.0"
 authors = [{ name = "Ruslan Magana Vsevolodovna", email = "contact@ruslanmv.com" }]
 keywords = ["agent-memory", "rag", "mcp", "context", "agent-matrix", "local-first"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Operating System :: OS Independent",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
 dependencies = ["numpy>=1.24"]
 
 [project.optional-dependencies]
@@ -25,13 +36,24 @@ all = ["matrix-context[embeddings,mcp,postgres,milvus,conformance]"]
 
 [project.scripts]
 matrix-context = "matrix_context.cli:main"
+mc = "matrix_context.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/agent-matrix/matrix-context"
 Repository = "https://github.com/agent-matrix/matrix-context"
+Documentation = "https://github.com/agent-matrix/matrix-context#readme"
+Issues = "https://github.com/agent-matrix/matrix-context/issues"
+Changelog = "https://github.com/agent-matrix/matrix-context/blob/main/docs/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
+# The Inspector UI (inspector.html) and Console SPA (console/) live inside the
+# package and are included by hatchling's default file selection — no
+# force-include (that would double-add them and break the wheel build).
 packages = ["src/matrix_context"]
+
+[tool.hatch.build.targets.sdist]
+# Keep the PyPI sdist lean — only what is needed to build the package.
+include = ["src/matrix_context", "README.md", "LICENSE", "pyproject.toml", "CITATION.cff"]
 
 [tool.ruff]
 line-length = 100

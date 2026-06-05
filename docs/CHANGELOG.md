@@ -2,6 +2,51 @@
 
 ## [0.1.0] — 2026-06-04
 ### Added
+- **Control plane / admin UI** (`frontend/`, single source of truth): a
+  self-contained console (Overview · Inspector · Ingest · Memory · Experts ·
+  Routing · Benchmarks · MoC Contract · Settings) in the emerald-glass MatrixHub
+  aesthetic. `frontend/server.py` serves the wired UI **and** the live `/v1` API
+  by reusing the backend's dispatch, and seeds a demo memory set. Additive —
+  imports the package, modifies nothing; the Cloud tab is omitted (pre-launch).
+- **Hugging Face Space packaging** (`hf/`): a best-practice Docker `Dockerfile`
+  (slim, non-root, healthcheck) + Space card + `deploy.py` that builds the Space
+  from `frontend/` + `src/` (no UI duplication). Published at
+  `huggingface.co/spaces/ruslanmv/matrix-context-console`. CI workflow
+  `deploy-hf-space.yml` publishes on push when the `HF_TOKEN` secret is set.
+- **Chatbot guide** (`docs/CHATBOT_GUIDE.md`): build a memory-backed chatbot via
+  the SDK or REST (`build_pack` before each turn, `remember` after), with
+  Anthropic/Ollama examples and production tips (scopes, importance, TTL, inspect).
+- **Context Console (Phase 0)**: a same-origin, zero-dependency operator console
+  served at `/console` (Overview · Ingest wizard · Memory · Inspector · Experts).
+  A live `console/api.js` adapter drives the real `/v1` API in Compatible Mode
+  (client-side chunking → `POST /v1/remember`, metadata encoded as tags); it maps
+  the response shapes (`remember.item`, `inspect.routing/.pack`,
+  `version.contract_version`, string scopes). Additive only — existing `/`,
+  `/ui`, `/inspector`, `/v1/*` routes and the frozen MoC Contract v1 are
+  unchanged. See `docs/CONSOLE_INTEGRATION.md`.
+- **End-to-end workflow test** (`tests/e2e/test_workflow.py`): one happy-path
+  walk through the product spine — SDK (remember → build_pack → inspect), the
+  REST server over real HTTP (full v1 contract + the Inspector UI), MoC Contract
+  v1 conformance, and the agent-generator/HomePilot adapters. `make install &&
+  make test`. The Makefile gained `e2e`, `conformance`, `badges`, `benchmark`,
+  `paper`, and `check` targets.
+- **Context Inspector UI**: a single-file, dependency-free web inspector served
+  by the REST server at `/` (and `/ui`). Run a query and see selected vs.
+  unselected experts, routing scores, kept items with score breakdowns, dropped
+  items with reasons, and the final prompt-ready pack. `matrix-context serve
+  --transport rest` → open `http://127.0.0.1:8088/`.
+- **Release-candidate hardening**: README 5-minute quickstart, a benchmark smoke
+  step in CI, and `docs/RELEASE_CANDIDATE.md` (the RC checklist; DOI deferred
+  until manuscript review).
+- **Conformance badges** (`python -m moc_contract.badges`): generates
+  self-contained SVG badges + `status.json` for `MoC API v1`, `MoC Inspect v1`,
+  and `MoC MCP v1` from ground truth (reference passes API + Inspect; MCP is
+  `pending` until a conformant MCP server ships). README displays them.
+- **Benchmark published** to `huggingface.co/datasets/ruslanmv/moc-rag-benchmark`
+  (private): dataset card with usage + DOI-ready citation, splits, and result
+  artifacts for BM25/dense/hybrid/metadata/reranked RAG and MoC-RAG.
+- **`paper` CI workflow**: on LaTeX/result changes, regenerates figures/tables
+  and compiles the manuscript, uploading the PDF as a build artifact.
 - MoC-RAG engine: two-tier context router, BM25 + dense retrieval with RRF fusion,
   token-budgeted context-pack assembler with importance/recency/MMR scoring.
 - `inspect()` explainability for routing and pack selection.
