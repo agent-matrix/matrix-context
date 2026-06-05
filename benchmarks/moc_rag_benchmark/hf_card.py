@@ -46,11 +46,15 @@ def dataset_card(counts: Dict[str, int]) -> str:
     return _FRONTMATTER + f"""
 # MoC-RAG Benchmark: Typed Context Routing for Agentic Memory
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20560139.svg)](https://doi.org/10.5281/zenodo.20560139)
+
 A benchmark for evaluating whether **routed, typed context experts**
 (Mixture-of-Contexts RAG) improve retrieval and answer quality compared with
 **flat RAG**, under a fixed token budget.
 
-Version `{__benchmark_version__}`.
+Version `{__benchmark_version__}`. This dataset accompanies the paper
+*Matrix Context: Mixture-of-Contexts RAG for Robust and Inspectable Agent Memory*
+([10.5281/zenodo.20560139](https://doi.org/10.5281/zenodo.20560139)).
 
 ## Why this benchmark
 
@@ -151,20 +155,25 @@ is `MoC API v1 Compatible` / `MoC Inspect v1 Compatible`. See
 
 ## Citation
 
-Please cite the software via its `CITATION.cff`
-(`github.com/agent-matrix/matrix-context`). A dataset/software **DOI is
-forthcoming** (Zenodo deposit on tagged release, after manuscript review); this
-card will be updated with the DOI when minted. Until then, cite as:
+This benchmark accompanies the paper — please cite it:
 
-```
-@software{{moc_rag_benchmark,
-  title  = {{MoC-RAG Benchmark: Typed Context Routing for Agentic Memory}},
-  author = {{Magana Vsevolodovna, Ruslan}},
-  year   = {{2026}},
-  note   = {{Independent Researcher, Genova, Italy. DOI forthcoming.}},
-  url    = {{https://huggingface.co/datasets/ruslanmv/moc-rag-benchmark}}
+> Magaña Vsevolodovna, R. I. (2026). *Matrix Context: Mixture-of-Contexts RAG for
+> Robust and Inspectable Agent Memory*. Zenodo.
+> https://doi.org/10.5281/zenodo.20560139
+
+```bibtex
+@misc{{magana2026matrixcontext,
+  title     = {{Matrix Context: Mixture-of-Contexts RAG for Robust and Inspectable Agent Memory}},
+  author    = {{Magaña Vsevolodovna, Ruslan Idelfonso}},
+  year      = {{2026}},
+  publisher = {{Zenodo}},
+  doi       = {{10.5281/zenodo.20560139}},
+  url        = {{https://doi.org/10.5281/zenodo.20560139}}
 }}
 ```
+
+Software (Apache-2.0): `github.com/agent-matrix/matrix-context` ·
+Leaderboard: `huggingface.co/spaces/ruslanmv/moc-rag-leaderboard`.
 """
 
 

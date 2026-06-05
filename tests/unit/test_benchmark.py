@@ -34,6 +34,31 @@ def test_generate_meets_targets_and_integrity():
         assert g.gold_answer
 
 
+def test_committed_dataset_is_frozen_and_reproducible():
+    """The committed dataset must equal the deterministic seed-13 generation.
+
+    This freezes the published benchmark: the dataset/results are the source of
+    truth for the paper and the HF dataset. If generation logic ever changes,
+    this fails loudly so the data is re-frozen intentionally (and the numbers
+    re-published) rather than drifting silently. CI never regenerates it.
+    """
+    import json
+    from pathlib import Path
+
+    data_dir = Path(__file__).resolve().parents[2] / "benchmarks" / "moc_rag_benchmark" / "data"
+    if not (data_dir / "contexts.jsonl").exists():
+        import pytest
+        pytest.skip("committed dataset not present in this checkout")
+
+    contexts, queries, _ = generate()
+    committed_ctx = [json.loads(x) for x in (data_dir / "contexts.jsonl").read_text().splitlines()]
+    committed_q = [json.loads(x) for x in (data_dir / "queries.jsonl").read_text().splitlines()]
+
+    assert [c.context_id for c in contexts] == [c["context_id"] for c in committed_ctx]
+    assert [c.content for c in contexts] == [c["content"] for c in committed_ctx]
+    assert [q.query for q in queries] == [q["query"] for q in committed_q]
+
+
 def test_splits_are_disjoint_and_cover():
     _, queries, _ = generate()
     sp = split(queries)
