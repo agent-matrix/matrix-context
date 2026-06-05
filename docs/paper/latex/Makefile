@@ -3,6 +3,7 @@
 #   make figures   regenerate figures/*.{pdf,svg} from committed benchmark JSON
 #   make tables    regenerate tables/*.tex from committed benchmark JSON
 #   make paper     compile main.tex -> build/matrix_context_moc_rag.pdf
+#   make arxiv     clean, self-contained arXiv source bundle (verified to compile)
 #   make all       artifacts + paper
 #   make clean     remove LaTeX aux + build/
 #
@@ -18,9 +19,13 @@ PDFNAME   = matrix_context_moc_rag
 # Run scripts from the repo root so their relative result paths resolve.
 REPO_ROOT = ../../..
 
-.PHONY: all artifacts figures tables paper clean
+.PHONY: all artifacts figures tables paper arxiv clean
 
 all: artifacts paper
+
+# Self-contained arXiv source tarball (verified to compile with pdflatex alone).
+arxiv: artifacts
+	sh $(SCRIPTS)/make_arxiv.sh
 
 artifacts: figures tables
 

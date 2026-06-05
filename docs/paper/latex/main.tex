@@ -2,14 +2,22 @@
 
 % --- packages -------------------------------------------------------------
 \usepackage[a4paper,margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+% Emit a ToUnicode map so PDF text extraction / copy-paste resolves ligatures
+% (fi, fl, ...) correctly with the default fonts (arXiv-recommended; no lmodern
+% needed). Must precede the document body.
+\input{glyphtounicode}
+\pdfgentounicode=1
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage[table]{xcolor}
 \usepackage{caption}
 \usepackage{enumitem}
+\usepackage[expansion=false]{microtype}  % char protrusion (expansion needs scalable fonts)
 \usepackage[hidelinks]{hyperref}
+\usepackage{xurl}  % allow long URLs to break across lines (no margin overflow)
 
 \definecolor{mocblue}{HTML}{1A73E8}
 \graphicspath{{figures/}}
@@ -18,11 +26,11 @@
 \title{\textbf{Matrix Context: Mixture-of-Contexts RAG for Robust and
 Inspectable Agent Memory}\\[0.3em]
 \large Routing typed context experts improves robustness under paraphrased and
-adversarial retrieval conditions}
+adversarial queries}
 
 \author{Ruslan Magana Vsevolodovna\\
 \small Independent Researcher, Genova, Italy \\
-\small \texttt{contact@ruslanmv.com} \quad \href{https://ruslanmv.com}{ruslanmv.com}}
+\small \texttt{contact@ruslanmv.com} \,$\cdot$\, \href{https://ruslanmv.com}{ruslanmv.com}}
 
 \date{June 2026}
 

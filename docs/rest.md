@@ -13,6 +13,14 @@ matrix-context serve --transport rest --port 8088
 # matrix-context REST listening on http://127.0.0.1:8088/v1
 ```
 
+The server also serves two same-origin, zero-dependency UIs:
+
+- **Context Inspector** at `http://127.0.0.1:8088/` (and `/ui`) — a single-file
+  query inspector (routing scores, kept/dropped items, final pack).
+- **Context Console** at `http://127.0.0.1:8088/console` — a small operator
+  console (Overview · Ingest wizard · Memory · Inspector · Experts) that drives
+  the live `/v1` API via `console/api.js`. No CDN, no build step.
+
 Or from Python:
 
 ```python

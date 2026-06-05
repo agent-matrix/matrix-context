@@ -1,0 +1,39 @@
+name: deploy-benchmark-space
+# Publish the MoC-RAG Benchmark leaderboard to a Hugging Face Gradio Space.
+# Manual only (workflow_dispatch) — the Space rarely changes, so there is no need
+# to redeploy on every push. Run it from the Actions tab when you want to publish.
+#
+# Requires a repository secret HF_TOKEN (Settings -> Secrets -> Actions) with
+# WRITE access to the target namespace. To publish under an org (e.g.
+# AgentMatrix), the token must grant that org write access to repos. Without
+# HF_TOKEN the deploy step no-ops.
+#
+# Publish to the org, private:
+#   Actions -> deploy-benchmark-space -> Run workflow
+#     repo = AgentMatrix/moc-rag-leaderboard,  private = true
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "HF Space repo id"
+        default: "ruslanmv/moc-rag-leaderboard"
+      private:
+        description: "Create/keep the Space private?"
+        type: boolean
+        default: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install "huggingface_hub>=0.24"
+      - name: Deploy leaderboard to Hugging Face Spaces
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python -m benchmarks.moc_rag_benchmark.deploy_space \
+            --repo "${{ github.event.inputs.repo || 'ruslanmv/moc-rag-leaderboard' }}" \
+            ${{ github.event.inputs.private == 'true' && '--private' || '' }}

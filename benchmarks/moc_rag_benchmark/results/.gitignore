@@ -1,0 +1,5 @@
+# Transient run outputs land at this directory's root (default --out). The
+# curated reference runs live in hashing/ and st/ and are kept; FINDINGS.md too.
+/*.json
+/*.md
+!/FINDINGS.md

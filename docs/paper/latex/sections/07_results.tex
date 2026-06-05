@@ -3,8 +3,9 @@
 
 \paragraph{Aggregate test split.} On the mixed test split, which blends all five
 query styles, MoC-RAG with $\mathrm{top\_experts}{=}3$ posts the best aggregate
-Recall@8 (86\%) and the strongest MRR/nDCG, ahead of BM25 (78\%) and the dense
-family (78--82\%), while carrying roughly half their hard distractors at
+Recall@8 (86\%) and the strongest MRR/nDCG, ahead of BM25 (78\%) and the
+embedding-based baselines (78--82\%), while carrying roughly half their hard
+distractors at
 95--100\% routing accuracy (Table~\ref{tab:main}). We stress that this aggregate
 already reflects the harder query mix; on a purely keyword-aligned split BM25 is
 co-leading, as the robustness breakdown makes explicit.
@@ -14,7 +15,7 @@ co-leading, as the robustness breakdown makes explicit.
   \caption{Main benchmark results on the mixed test split (real embedder).
   MoC-RAG rows shaded. HardDistr and Tokens: lower is better.}
   \label{tab:main}
-  \input{tables/main_results}
+  \resizebox{\textwidth}{!}{\input{tables/main_results}}
 \end{table}
 
 \paragraph{Robustness by query type.} Table~\ref{tab:robust} and
@@ -31,12 +32,12 @@ but pay for it in harmful context.
   \caption{Robustness by query type (Recall@8 and Hard Distractors per split;
   $\Delta$ is the keyword$\to$adversarial recall change in points).}
   \label{tab:robust}
-  \input{tables/robustness_results}
+  \resizebox{\textwidth}{!}{\input{tables/robustness_results}}
 \end{table}
 
 \paragraph{Harmful context.} Figure~\ref{fig:hd} shows packed hard distractors on
-the adversarial split: MoC-RAG carries 48--62 versus 91--103 for the dense
-family---roughly half. Figure~\ref{fig:pareto} places methods on a recall vs.\
+the adversarial split: MoC-RAG carries 48--62 versus 91--103 for the dense and
+hybrid baselines---roughly half. Figure~\ref{fig:pareto} places methods on a recall vs.\
 hard-distractor Pareto plane; MoC-RAG variants dominate the upper-right (more
 recall, less harmful context).
 
@@ -44,7 +45,7 @@ recall, less harmful context).
   \centering
   \begin{minipage}{0.49\linewidth}
     \centering\includegraphics[width=\linewidth]{adversarial_recall_drop.pdf}
-    \caption{Recall change, keyword$\to$adversarial (closer to 0 is more robust).}
+    \caption{Recall@8 drop, keyword$\to$adversarial (lower is better).}
     \label{fig:drop}
   \end{minipage}\hfill
   \begin{minipage}{0.49\linewidth}

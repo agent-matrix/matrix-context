@@ -3,7 +3,7 @@
 
 \paragraph{Setup.} We evaluate with two embedders: an offline zero-dependency
 hashing embedder (a continuous-integration guard that requires no model
-download) and \texttt{sentence-transformers/all-MiniLM-L6-v2}~\cite{reimers2019sbert}
+download) and \path{sentence-transformers/all-MiniLM-L6-v2}~\cite{reimers2019sbert}
 as the competent embedder. Unless stated otherwise, results use the real
 embedder, a per-query token budget of 200, and $K=8$ for ranking metrics. Each
 method indexes the same 1{,}000-item store and is evaluated on the held-out test
@@ -19,14 +19,19 @@ good router should keep out.
 \paragraph{Reproducibility.} The benchmark is deterministic (seeded) and every
 number, figure, and table in this paper is regenerated from committed result
 artifacts:
+{\small
 \begin{verbatim}
 python -m benchmarks.moc_rag_benchmark.run build
-python -m benchmarks.moc_rag_benchmark.run run     --split test --embedder st --groundedness
-python -m benchmarks.moc_rag_benchmark.run compare  --embedder st --groundedness
-make figures   # docs/paper/latex/scripts/make_paper_figures.py -> figures/*.{pdf,svg}
-make tables    # docs/paper/latex/scripts/make_paper_tables.py  -> tables/*.tex
-make paper     # compiles main.tex -> build/matrix_context_moc_rag.pdf
+python -m benchmarks.moc_rag_benchmark.run run     --split test --embedder st
+python -m benchmarks.moc_rag_benchmark.run compare --embedder st --groundedness
+make figures   # scripts/make_paper_figures.py -> figures/*.{pdf,svg}
+make tables    # scripts/make_paper_tables.py  -> tables/*.tex
+make paper     # main.tex -> build/matrix_context_moc_rag.pdf
 \end{verbatim}
-The dataset is published at \href{https://huggingface.co/datasets/ruslanmv/moc-rag-benchmark}{huggingface.co/datasets/ruslanmv/moc-rag-benchmark}
+}
+The dataset is published at
+\href{https://huggingface.co/datasets/ruslanmv/moc-rag-benchmark}{huggingface.co/datasets/ruslanmv/moc-rag-benchmark},
+an interactive leaderboard at
+\href{https://huggingface.co/spaces/ruslanmv/moc-rag-leaderboard}{huggingface.co/spaces/ruslanmv/moc-rag-leaderboard},
 and the software (Apache-2.0) at
 \href{https://github.com/agent-matrix/matrix-context}{github.com/agent-matrix/matrix-context}.

@@ -13,3 +13,9 @@ jobs:
       - run: pytest -q
       - run: python -m eval.harness
       - run: python -m moc_contract.conformance   # MoC Contract v1 conformance
+      - name: Benchmark smoke (offline)
+        run: |
+          python -m benchmarks.moc_rag_benchmark.run build
+          python -m benchmarks.moc_rag_benchmark.run run \
+            --split test_keyword --embedder hashing \
+            --algorithms bm25_rag,moc_rag_e2 --groundedness

@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="640" viewBox="0 0 1080 640" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" role="img" aria-label="How Matrix Context works: ingest path and recall path">
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#5f6368"/></marker>
+    <marker id="arrG" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#137333"/></marker>
+    <marker id="arrR" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#d93025"/></marker>
+  </defs>
+  <style>
+    .box { fill:#eef3ff; stroke:#1a73e8; stroke-width:1.5; }
+    .t   { fill:#11223a; font-size:13px; text-anchor:middle; }
+    .tb  { fill:#11223a; font-size:13.5px; font-weight:700; text-anchor:middle; }
+    .sub { fill:#5f6368; font-size:10.5px; text-anchor:middle; }
+    .chip{ fill:#ffffff; stroke:#cbd5e1; stroke-width:1; }
+    .chipt{ fill:#202124; font-size:11.5px; text-anchor:middle; }
+    .sect{ fill:#9aa0a6; font-size:11px; font-weight:700; letter-spacing:1px; }
+    .flow{ stroke:#5f6368; stroke-width:1.6; fill:none; }
+  </style>
+
+  <!-- interfaces strip -->
+  <text x="540" y="26" text-anchor="middle" font-size="12" fill="#5f6368">
+    <tspan fill="#11223a" font-weight="700">Access via</tspan>  Python SDK · CLI · REST (MoC Contract v1) · MCP
+  </text>
+
+  <!-- ============================ INGEST (write path) ============================ -->
+  <text x="44" y="58" class="sect">① INGEST  ·  WRITE PATH</text>
+  <rect x="40" y="68" width="340" height="196" rx="14" fill="#f1faf3" stroke="#34a853" stroke-width="2"/>
+  <text x="62" y="96" font-size="15.5" font-weight="700" fill="#137333">Ingest your data — start here</text>
+  <text x="62" y="114" font-size="11" fill="#137333" opacity="0.85">documents, conversations, decisions, events…</text>
+  <!-- source chips -->
+  <g>
+    <rect class="chip" x="60"  y="128" width="146" height="30" rx="8"/><text class="chipt" x="133" y="147">Documents / files</text>
+    <rect class="chip" x="214" y="128" width="146" height="30" rx="8"/><text class="chipt" x="287" y="147">Chats &amp; sessions</text>
+    <rect class="chip" x="60"  y="166" width="146" height="30" rx="8"/><text class="chipt" x="133" y="185">Decisions</text>
+    <rect class="chip" x="214" y="166" width="146" height="30" rx="8"/><text class="chipt" x="287" y="185">Preferences / profile</text>
+    <rect class="chip" x="60"  y="204" width="146" height="30" rx="8"/><text class="chipt" x="133" y="223">Policies &amp; rules</text>
+    <rect class="chip" x="214" y="204" width="146" height="30" rx="8"/><text class="chipt" x="287" y="223">Tool / API outputs</text>
+  </g>
+  <text x="210" y="252" class="sub">each item is tagged with a <tspan font-weight="700" fill="#137333">type</tspan> + <tspan font-weight="700" fill="#137333">scope</tspan></text>
+
+  <!-- ingest arrow into the store -->
+  <path d="M382 170 C 430 170 430 300 460 312" stroke="#137333" stroke-width="3" fill="none" marker-end="url(#arrG)"/>
+  <text x="430" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#137333">remember()</text>
+  <text x="430" y="166" text-anchor="middle" font-size="11" fill="#137333">POST /v1/remember</text>
+
+  <!-- ============================ THE STORE (hub) ============================ -->
+  <rect x="470" y="296" width="250" height="150" rx="14" fill="#0b3d91"/>
+  <text x="595" y="324" text-anchor="middle" font-size="15.5" font-weight="700" fill="#ffffff">Typed Memory Store</text>
+  <text x="595" y="342" text-anchor="middle" font-size="10.5" fill="#ffffff" opacity="0.8">SQLite = source of truth · vectors = accelerator</text>
+  <g fill="rgba(255,255,255,0.12)">
+    <rect x="486" y="356" width="110" height="24" rx="6" stroke="#ffffff" stroke-opacity="0.5"/><text x="541" y="372" text-anchor="middle" font-size="11" fill="#fff">session</text>
+    <rect x="604" y="356" width="110" height="24" rx="6" stroke="#ffffff" stroke-opacity="0.5"/><text x="659" y="372" text-anchor="middle" font-size="11" fill="#fff">profile</text>
+    <rect x="486" y="386" width="110" height="24" rx="6" stroke="#ffffff" stroke-opacity="0.5"/><text x="541" y="402" text-anchor="middle" font-size="11" fill="#fff">semantic</text>
+    <rect x="604" y="386" width="110" height="24" rx="6" stroke="#ffffff" stroke-opacity="0.5"/><text x="659" y="402" text-anchor="middle" font-size="11" fill="#fff">episodic</text>
+    <rect x="486" y="416" width="110" height="24" rx="6" stroke="#ffffff" stroke-opacity="0.5"/><text x="541" y="432" text-anchor="middle" font-size="11" fill="#fff">document</text>
+    <rect x="604" y="416" width="110" height="24" rx="6" stroke="#ffffff" stroke-opacity="0.5"/><text x="659" y="432" text-anchor="middle" font-size="11" fill="#fff">policy</text>
+  </g>
+  <text x="595" y="288" text-anchor="middle" font-size="11" fill="#9aa0a6">typed context experts</text>
+
+  <!-- interfaces band (right of store) -->
+  <text x="900" y="58" class="sect">② RECALL  ·  READ PATH</text>
+
+  <!-- ============================ RECALL (read path) ============================ -->
+  <!-- chain at y ~ 500 -->
+  <g>
+    <rect class="box" x="40"  y="500" width="120" height="56" rx="10"/><text class="tb" x="100" y="533">Query</text>
+    <rect class="box" x="196" y="500" width="176" height="56" rx="10"/><text class="tb" x="284" y="525">Hybrid Router</text><text class="sub" x="284" y="542">type · scope · keyword · dense</text>
+    <rect class="box" x="408" y="500" width="150" height="56" rx="10"/><text class="tb" x="483" y="525">Retrieve</text><text class="sub" x="483" y="542">BM25 + dense (RRF)</text>
+    <rect class="box" x="594" y="500" width="104" height="56" rx="10"/><text class="tb" x="646" y="533">Rerank</text>
+    <rect class="box" x="734" y="500" width="150" height="56" rx="10"/><text class="tb" x="809" y="525">Budgeted</text><text class="tb" x="809" y="542">Context Pack</text>
+    <rect x="920" y="500" width="140" height="56" rx="10" fill="#fff3e0" stroke="#f9ab00" stroke-width="1.5"/><text class="tb" x="990" y="533">LLM / Agent</text>
+  </g>
+  <!-- chain arrows -->
+  <path class="flow" d="M160 528 H196" marker-end="url(#arr)"/>
+  <path class="flow" d="M372 528 H408" marker-end="url(#arr)"/>
+  <path class="flow" d="M558 528 H594" marker-end="url(#arr)"/>
+  <path class="flow" d="M698 528 H734" marker-end="url(#arr)"/>
+  <path class="flow" d="M884 528 H920" marker-end="url(#arr)"/>
+
+  <!-- store feeds retrieval; router selects experts in the store -->
+  <path class="flow" d="M560 446 C 540 470 500 482 483 500" marker-end="url(#arr)"/>
+  <path d="M300 500 C 360 470 430 452 470 430" stroke="#1a73e8" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+  <text x="372" y="478" font-size="10.5" fill="#1a73e8">route to a few experts</text>
+
+  <!-- ============================ INSPECT ============================ -->
+  <rect x="300" y="586" width="560" height="40" rx="10" fill="#fdecea" stroke="#d93025" stroke-width="1.4" stroke-dasharray="6 4"/>
+  <text x="580" y="611" text-anchor="middle" font-size="12.5" fill="#a50e0e">
+    <tspan font-weight="700">Inspect</tspan>  selected vs. dropped experts · routing scores · why each item was kept or dropped  ·  inspect() / /v1/inspect
+  </text>
+  <path d="M284 556 C 284 575 300 580 320 588" stroke="#d93025" stroke-width="1.2" fill="none" stroke-dasharray="4 3" marker-end="url(#arrR)"/>
+  <path d="M809 556 C 809 575 800 580 800 586" stroke="#d93025" stroke-width="1.2" fill="none" stroke-dasharray="4 3" marker-end="url(#arrR)"/>
+</svg>

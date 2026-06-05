@@ -1,0 +1,58 @@
+name: Build & Publish to PyPI
+# Build distributions on a published GitHub Release and publish to PyPI via OIDC
+# Trusted Publishing (no API tokens). One-time setup on PyPI:
+#   PyPI → project "matrix-context" → Publishing → add a GitHub trusted publisher
+#   (repo: agent-matrix/matrix-context, workflow: release.yml, environment: pypi).
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write   # upload built artifacts to the GitHub release
+  id-token: write   # required for OIDC / Trusted Publishing
+
+jobs:
+  build:
+    name: Build distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install build backend
+        run: python -m pip install --upgrade pip build
+      - name: Build wheel and sdist
+        run: python -m build
+      - name: Verify the built distributions
+        run: |
+          python -m pip install --upgrade twine packaging
+          python -m twine check dist/*
+      - name: Attach artifacts to the GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+      - name: Persist artifacts for the publish job
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-dists
+          path: dist/
+
+  publish:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: pypi
+      url: https://pypi.org/project/matrix-context/
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-dists
+          path: dist/
+      - name: Publish via Trusted Publishing
+        uses: pypa/gh-action-pypi-publish@release/v1

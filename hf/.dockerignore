@@ -1,0 +1,18 @@
+# Keep the Space build context small — only the backend + frontend are needed.
+.git
+**/__pycache__
+*.pyc
+*.db
+*.matrix-context.db
+tests
+docs
+benchmarks
+experiments
+eval
+moc_contract
+badges
+.github
+.venv
+.mypy_cache
+.ruff_cache
+.pytest_cache

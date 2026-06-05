@@ -8,6 +8,11 @@ is both wasteful and opaque. It spends a fixed prompt budget without regard to
 the \emph{type} of what it retrieves, and it offers no account of \emph{why} a
 given item was chosen.
 
+For example, an agent may store a user preference, a project decision, a stale
+session note, a policy rule, and a document excerpt that all mention the same
+keyword. A flat retriever sees only similar text; the agent, however, needs the
+right \emph{kind} of memory.
+
 Matrix Context proposes a different shape, which we call
 \emph{Mixture-of-Contexts RAG} (MoC-RAG). Rather than retrieving from one
 undifferentiated store, it routes each query to the smallest useful subset of
@@ -36,7 +41,7 @@ shift, while MoC-RAG degrades far more gracefully.
   (\S\ref{sec:benchmark}).
   \item An \textbf{evidence-based robustness result}: MoC-RAG preserves higher
   recall under adversarial lexical shift and roughly halves hard distractors
-  versus the dense baseline family, at 95--100\% routing accuracy
+  versus the embedding-based baselines, at 95--100\% routing accuracy
   (\S\ref{sec:results}), together with a fully reproducible figure/table
   pipeline.
 \end{enumerate}

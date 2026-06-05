@@ -1,6 +1,6 @@
 \section{Discussion}
 
-The results support a careful, falsifiable claim rather than a sweeping one.
+The results support a specific, falsifiable claim rather than a sweeping one.
 \textbf{BM25 is not weak}---it is the best method on keyword-aligned queries, and
 a benchmark that hid this would not be credible. What changes under paraphrase
 and adversarial phrasing is that surface overlap stops being a reliable signal,
@@ -25,3 +25,8 @@ wrong, outdated, or contradictory memory. In that regime, selecting the right
 typed experts before retrieving is a more reliable lever than ranking a single
 flat index, and the inspectability of the decision is a product feature in its
 own right.
+
+For practitioners, the implication is simple: typed memory is not only an
+organizational convenience, it is a retrieval signal. When a query is vague or
+misleading, knowing whether the answer most likely lives in a decision, a policy,
+a user profile, or a document can matter as much as lexical similarity.

@@ -187,6 +187,84 @@ def test_server_runs_and_serves_inspect_over_http():
         server.server_close()
 
 
+def test_inspector_ui_is_served_at_root():
+    """The Context Inspector UI is served as HTML at / and /ui."""
+    import threading
+    import urllib.request
+
+    from matrix_context.serve.rest.app import inspector_html
+
+    html = inspector_html()
+    assert "Context Inspector" in html
+    assert '"/inspect"' in html and "/v1" in html   # calls the inspect endpoint
+
+    m = ContextManager.create("rest-ui", path=":memory:")
+    server = create_app(m, host="127.0.0.1", port=0)
+    host, port = server.server_address
+    t = threading.Thread(target=server.serve_forever, daemon=True)
+    t.start()
+    try:
+        for path in ("/", "/ui"):
+            with urllib.request.urlopen(f"http://{host}:{port}{path}", timeout=5) as r:
+                assert r.status == 200
+                assert r.headers.get_content_type() == "text/html"
+                assert "Context Inspector" in r.read().decode()
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+def test_console_asset_is_path_safe():
+    from matrix_context.serve.rest.app import console_asset
+    assert console_asset("index.html") is not None
+    assert console_asset("api.js")[1].startswith("application/javascript")
+    assert console_asset("console.css")[1].startswith("text/css")
+    # traversal / nested / unknown are rejected
+    assert console_asset("../app.py") is None
+    assert console_asset("nope.js") is None
+    assert console_asset("sub/x.js") is None
+
+
+def test_console_spa_is_served_live():
+    """The Context Console (Phase 0) is served same-origin at /console; existing
+    routes and the contract are untouched."""
+    import threading
+    import urllib.error
+    import urllib.request
+
+    m = ContextManager.create("rest-console", path=":memory:")
+    server = create_app(m, host="127.0.0.1", port=0)
+    host, port = server.server_address
+    base = f"http://{host}:{port}"
+    t = threading.Thread(target=server.serve_forever, daemon=True)
+    t.start()
+
+    def get(path):
+        try:
+            with urllib.request.urlopen(base + path, timeout=5) as r:
+                return r.status, r.headers.get_content_type(), r.read().decode()
+        except urllib.error.HTTPError as e:
+            return e.code, e.headers.get_content_type(), ""
+
+    try:
+        st, ct, body = get("/console")
+        assert st == 200 and ct == "text/html" and "Matrix Context" in body
+        st, ct, body = get("/console/api.js")
+        assert st == 200 and "window.MC" in body and "/inspect" in body  # the live adapter
+        st, ct, body = get("/console/app.js")
+        assert st == 200 and "viewInspector" in body
+        assert get("/console/console.css")[1] == "text/css"
+        assert get("/console/missing.js")[0] == 404
+        # existing surfaces still work, contract unchanged
+        assert get("/")[1] == "text/html"
+        with urllib.request.urlopen(base + "/v1/version", timeout=5) as r:
+            import json
+            assert json.loads(r.read())["contract_version"] == "1.0.0"
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
 def test_default_rest_port_is_8088():
     # Acceptance: the app is meant to run on localhost:8088 by default.
     import inspect as _inspect

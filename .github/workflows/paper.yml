@@ -1,0 +1,36 @@
+name: paper
+on:
+  push:
+    paths:
+      - "docs/paper/latex/**"
+      - "benchmarks/moc_rag_benchmark/results/**"
+      - ".github/workflows/paper.yml"
+  pull_request:
+    paths:
+      - "docs/paper/latex/**"
+      - ".github/workflows/paper.yml"
+  workflow_dispatch:
+
+jobs:
+  build-pdf:
+    # Regenerate figures/tables from the committed benchmark JSON, then compile
+    # the LaTeX manuscript and upload the PDF as a build artifact.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install matplotlib
+      - name: Install TeX Live
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended latexmk
+      - name: Build figures, tables, and PDF
+        run: make -C docs/paper/latex all
+      - uses: actions/upload-artifact@v4
+        with:
+          name: matrix-context-moc-rag-paper
+          path: docs/paper/latex/build/matrix_context_moc_rag.pdf
+          if-no-files-found: error
