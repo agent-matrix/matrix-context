@@ -13,9 +13,13 @@ jobs:
       - run: pytest -q
       - run: python -m eval.harness
       - run: python -m moc_contract.conformance   # MoC Contract v1 conformance
-      - name: Benchmark smoke (offline)
+      - name: Benchmark smoke (committed dataset; never regenerates)
+        # The dataset and results under benchmarks/moc_rag_benchmark/{data,results}
+        # are frozen, committed artifacts (the source of truth for the paper and
+        # the HF dataset). CI validates the code against them and writes its
+        # report to a temp dir, so committed files are never rebuilt or
+        # overwritten. Regenerate intentionally with `make benchmark` locally.
         run: |
-          python -m benchmarks.moc_rag_benchmark.run build
           python -m benchmarks.moc_rag_benchmark.run run \
             --split test_keyword --embedder hashing \
-            --algorithms bm25_rag,moc_rag_e2 --groundedness
+            --algorithms bm25_rag,moc_rag_e2 --groundedness --out /tmp/bench-smoke

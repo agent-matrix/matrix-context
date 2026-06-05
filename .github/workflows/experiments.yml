@@ -22,18 +22,21 @@ jobs:
         with: { name: experiments-offline, path: experiments/results/ }
 
   benchmark:
-    # MoC-RAG benchmark offline guard — build the dataset + run every method
-    # with the hashing embedder (no downloads).
+    # MoC-RAG benchmark offline guard — run every method with the hashing
+    # embedder (no downloads) against the COMMITTED dataset. The dataset and
+    # results under benchmarks/moc_rag_benchmark/{data,results} are frozen,
+    # committed artifacts (the source of truth for the paper and the HF dataset),
+    # so CI does NOT rebuild them; it writes its report to a temp dir. Regenerate
+    # intentionally with `make benchmark` locally, then commit the new artifacts.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
       - run: pip install -e .
-      - run: python -m benchmarks.moc_rag_benchmark.run build
-      - run: python -m benchmarks.moc_rag_benchmark.run run --split test --embedder hashing --groundedness
+      - run: python -m benchmarks.moc_rag_benchmark.run run --split test --embedder hashing --groundedness --out /tmp/bench
       - uses: actions/upload-artifact@v4
-        with: { name: moc-rag-benchmark-offline, path: benchmarks/moc_rag_benchmark/results/ }
+        with: { name: moc-rag-benchmark-offline, path: /tmp/bench }
 
   ollama:
     # Real bake-off with a small local model. Manual trigger only (slow).
