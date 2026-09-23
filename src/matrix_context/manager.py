@@ -80,8 +80,8 @@ class ContextManager:
                                           importance=importance, tags=tuple(tags), ttl=ttl))
 
     def remember_managed(self, content: str, expert: str = "semantic", scope: str = "/",
-                         importance: float = 0.5, tags=(), ttl: Optional[float] = None,
-                         supersedes: Optional[str] = None) -> ContextItem:
+                         importance: float = 0.5, tags=(), ttl: float | None = None,
+                         supersedes: str | None = None) -> ContextItem:
         """Lifecycle-aware durable write.
 
         Exact/near duplicates return the existing live item. When `supersedes`
