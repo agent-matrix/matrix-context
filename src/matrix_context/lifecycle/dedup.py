@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable
 from difflib import SequenceMatcher
-from typing import Iterable, Optional
 
 from ..schema.item import ContextItem
 
@@ -21,10 +21,15 @@ def similarity(a: str, b: str) -> float:
     return SequenceMatcher(None, na, nb).ratio()
 
 
-def find_duplicate(content: str, items: Iterable[ContextItem], *,
-                   expert: str | None = None, scope: str | None = None,
-                   threshold: float = 0.94) -> Optional[ContextItem]:
-    best = None
+def find_duplicate(
+    content: str,
+    items: Iterable[ContextItem],
+    *,
+    expert: str | None = None,
+    scope: str | None = None,
+    threshold: float = 0.94,
+) -> ContextItem | None:
+    best: ContextItem | None = None
     best_score = threshold
     for item in items:
         if not item.is_live():
