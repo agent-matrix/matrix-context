@@ -10,6 +10,7 @@ EXPERT_DESCRIPTIONS = {
     "profile": "user preferences identity name role settings boundaries",
     "semantic": "durable facts decisions glossary stable knowledge",
     "episodic": "past events meetings actions incidents what happened when",
+    "procedural": "reusable methods workflows strategies lessons how to do something successfully",
     "document": "documents files manuals design docs reference material",
     "policy": "rules policy compliance allowed approval security guardrails legal",
 }

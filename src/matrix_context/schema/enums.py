@@ -3,7 +3,7 @@ from __future__ import annotations
 from enum import Enum
 
 # MVP expert taxonomy. These are typed memory partitions, NOT learned MoE experts.
-EXPERTS = ("session", "profile", "semantic", "episodic", "document", "policy")
+EXPERTS = ("session", "profile", "semantic", "episodic", "procedural", "document", "policy")
 
 
 class Sensitivity(str, Enum):

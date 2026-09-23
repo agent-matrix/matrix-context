@@ -19,6 +19,8 @@ from .schema.item import ContextItem
 from .schema.pack import ContextPack
 from .schema.query import RecallQuery
 from .store.sqlite import SqliteStore
+from .lifecycle.dedup import find_duplicate
+from .lifecycle.contradiction import supersede_item
 
 
 def _item_dict(item: ContextItem) -> dict:
@@ -76,6 +78,28 @@ class ContextManager:
                  importance: float = 0.5, tags=(), ttl: Optional[float] = None) -> ContextItem:
         return self.store.add(ContextItem(content=content, expert=expert, scope=scope,
                                           importance=importance, tags=tuple(tags), ttl=ttl))
+
+    def remember_managed(self, content: str, expert: str = "semantic", scope: str = "/",
+                         importance: float = 0.5, tags=(), ttl: float | None = None,
+                         supersedes: str | None = None) -> ContextItem:
+        """Lifecycle-aware durable write.
+
+        Exact/near duplicates return the existing live item. When `supersedes`
+        is supplied, the prior item is retained and marked superseded while the
+        new item records provenance through a `supersedes:<id>` tag.
+        """
+        duplicate = find_duplicate(content, self.store.all_items(), expert=expert, scope=scope)
+        if duplicate is not None and supersedes is None:
+            return duplicate
+        item = ContextItem(content=content, expert=expert, scope=scope,
+                           importance=importance, tags=tuple(tags), ttl=ttl)
+        if supersedes:
+            old = self.store.get(supersedes)
+            if old is None:
+                raise ValueError(f"cannot supersede unknown item: {supersedes}")
+            supersede_item(self.store, old, item)
+            return self.store.get(item.id) or item
+        return self.store.add(item)
 
     # Default expert fan-out. The bake-off (embedder=sentence-transformers,
     # store=memory) measured moc_rag winning at top_experts=2 — fewer distractors
